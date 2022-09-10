@@ -299,7 +299,7 @@ a:hover, a:focus, a:active {
   background: url(../img/logo.png) no-repeat left top;
   top: 40px;
   position: relative;
-  width: 351px;
+  width: 233px;
   height: 40px;
   text-indent: -999999px;
   -webkit-transition: .2s all;
@@ -322,7 +322,7 @@ a:hover, a:focus, a:active {
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
   .probootstrap-navbar .navbar-brand {
     position: relative;
-    width: 351px;
+    width: 117px;
     height: 40px;
     background: url(../img/logo@2x.png) no-repeat left 100%;
     background-size: cover;
@@ -1853,16 +1853,16 @@ section[data-section="menu"] {
 }
 
 .probootstrap-heading .primary-heading {
-  font-family: "Pinyon Script", serif;
+  font-family: "Miama Nueva", serif;
   color: #FFA33E;
   margin: 0;
   padding: 0;
-  font-size: 80px;
+  font-size: 60px;
 }
 
 @media screen and (max-width: 768px) {
   .probootstrap-heading .primary-heading {
-    font-size: 70px;
+    font-size: 35px;
   }
 }
 
@@ -1874,7 +1874,7 @@ section[data-section="menu"] {
   letter-spacing: .05em;
   font-size: 50px;
   position: relative;
-  top: -50px;
+  top: -36px;
   font-weight: 700;
   line-height: 40px;
 }
@@ -1882,6 +1882,7 @@ section[data-section="menu"] {
 @media screen and (max-width: 768px) {
   .probootstrap-heading .secondary-heading {
     font-size: 40px;
+    top: -36px;
   }
 }
 
