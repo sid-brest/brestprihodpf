@@ -1916,9 +1916,9 @@ section[data-section="menu"] {
 }
 
 .flexslider .probootstrap-slider-text .sub-heading {
-  font-size: 20px;
-  margin-top: -40px;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 40px;
+  /* margin-top: -40px; */
+  color: rgba(255, 255, 255, 100);
 }
 
 .flexslider .probootstrap-slider-text .sub-heading a {
