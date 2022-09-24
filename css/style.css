@@ -1050,7 +1050,7 @@ section[data-section="menu"] {
 
 @media screen and (max-width: 992px) {
   .probootstrap-cell .image {
-    height: 200px;
+    height: 350px;
   }
 }
 
