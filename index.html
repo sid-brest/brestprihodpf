@@ -767,9 +767,30 @@
       </div>
     </div>
   </div>
+
   <script>
+    // Check if the user has already seen the extranews today
+    function hasSeenExtranewsToday() {
+      var lastSeen = localStorage.getItem('extranews_last_seen');
+      if (lastSeen) {
+        var today = new Date().toDateString();
+        return lastSeen === today;
+      }
+      return false;
+    }
+
+    // Set the flag indicating the user has seen the extranews today
+    function setExtranewsSeenToday() {
+      var today = new Date().toDateString();
+      localStorage.setItem('extranews_last_seen', today);
+    }
+
     $(document).ready(function () {
-      $("#extranews").modal('show');
+      // Show the extranews only if the user hasn't seen it today
+      if (!hasSeenExtranewsToday()) {
+        $("#extranews").modal('show');
+        setExtranewsSeenToday();
+      }
     });
   </script>
 
