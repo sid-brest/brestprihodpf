@@ -4,6 +4,9 @@ schedule/venv/
 # Ignore images
 schedule/images/
 
+# Ignore logs
+schedule/logs/
+
 # Ignore Python compiled files
 schedule/__pycache__/
 *.pyc
@@ -24,4 +27,4 @@ schedule/*.txt
 Thumbs.db
 
 # Ignore backup files
-*.backup_*
+backups/

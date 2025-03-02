@@ -5,6 +5,7 @@ import pytesseract
 from pathlib import Path
 import shutil
 from datetime import datetime
+import logging
 
 # Указываем путь к исполняемому файлу tesseract
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
@@ -15,6 +16,30 @@ PARENT_DIR = os.path.dirname(SCRIPT_DIR)
 IMAGES_FOLDER = os.path.join(SCRIPT_DIR, "images")
 OUTPUT_FILE = os.path.join(SCRIPT_DIR, "result.txt")
 INDEX_FILE = os.path.join(PARENT_DIR, "index.html")
+LOG_DIR = os.path.join(SCRIPT_DIR, "logs")
+
+# Настройка логирования
+def setup_logging():
+    """Настраивает логирование в файл с текущей датой в имени"""
+    Path(LOG_DIR).mkdir(exist_ok=True)
+    
+    # Удаляем старые логи, если их больше 10
+    log_files = sorted(Path(LOG_DIR).glob("log_*.txt"), key=os.path.getmtime)
+    if len(log_files) > 10:
+        for old_log in log_files[:-10]:
+            os.remove(old_log)
+    
+    # Создаем новый лог-файл
+    log_filename = f"log_{datetime.now().strftime('%Y-%m-%d')}.txt"
+    log_filepath = os.path.join(LOG_DIR, log_filename)
+    
+    logging.basicConfig(
+        filename=log_filepath,
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        encoding="utf-8"
+    )
+    logging.info("Логирование настроено.")
 
 def recognize_text_from_images():
     """Распознает текст со всех изображений в указанной папке"""
@@ -28,10 +53,12 @@ def recognize_text_from_images():
                   if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
     
     if not image_files:
+        logging.warning("В папке images нет изображений.")
         print("В папке images нет изображений.")
         print(f"Пожалуйста, добавьте изображения в папку: {IMAGES_FOLDER}")
         return ""
     
+    logging.info(f"Найдено изображений: {len(image_files)}")
     print(f"Найдено изображений: {len(image_files)}")
     print("Начинаю распознавание текста...")
     
@@ -39,6 +66,7 @@ def recognize_text_from_images():
     for i, image_file in enumerate(image_files, 1):
         image_path = os.path.join(IMAGES_FOLDER, image_file)
         try:
+            logging.info(f"Обработка изображения {i}/{len(image_files)}: {image_file}")
             print(f"Обработка изображения {i}/{len(image_files)}: {image_file}")
             
             # Открываем изображение
@@ -48,9 +76,11 @@ def recognize_text_from_images():
             text = pytesseract.image_to_string(image, lang='rus')
             
             recognized_text += text + "\n"
+            logging.info(f"✓ Успешно распознан текст из файла: {image_file}")
             print(f"✓ Успешно распознан текст из файла: {image_file}")
             
         except Exception as e:
+            logging.error(f"❌ Ошибка при обработке файла {image_file}: {str(e)}")
             print(f"❌ Ошибка при обработке файла {image_file}: {str(e)}")
             continue
     
@@ -135,8 +165,19 @@ def create_schedule_html(text):
 def update_index_html(schedule_html):
     try:
         # Создаем резервную копию
-        backup_file = INDEX_FILE + f'.backup_{datetime.now().strftime("%Y%m%d_%H%M%S")}'
+        backup_dir = os.path.join(PARENT_DIR, "backups")
+        Path(backup_dir).mkdir(exist_ok=True)
+        
+        # Удаляем старые резервные копии, если их больше 10
+        backup_files = sorted(Path(backup_dir).glob("index.html.backup_*"), key=os.path.getmtime)
+        if len(backup_files) > 10:
+            for old_backup in backup_files[:-10]:
+                os.remove(old_backup)
+        
+        # Создаем новую резервную копию
+        backup_file = os.path.join(backup_dir, f'index.html.backup_{datetime.now().strftime("%Y%m%d_%H%M%S")}')
         shutil.copy2(INDEX_FILE, backup_file)
+        logging.info(f"✓ Создана резервная копия index.html: {backup_file}")
         print(f"✓ Создана резервная копия index.html: {backup_file}")
         
         # Читаем содержимое файла
@@ -158,18 +199,25 @@ def update_index_html(schedule_html):
         with open(INDEX_FILE, 'w', encoding='utf-8') as file:
             file.write(new_content)
         
+        logging.info("✓ Файл index.html успешно обновлен")
         print(f"✓ Файл index.html успешно обновлен")
         
     except Exception as e:
+        logging.error(f"❌ Ошибка при обновлении index.html: {str(e)}")
         print(f"❌ Ошибка при обновлении index.html: {str(e)}")
         if 'backup_file' in locals():
+            logging.info(f"Восстанавливаем из резервной копии: {backup_file}")
             print(f"Восстанавливаем из резервной копии: {backup_file}")
             shutil.copy2(backup_file, INDEX_FILE)
 
 def main():
     try:
+        # Настраиваем логирование
+        setup_logging()
+        
         # Проверяем наличие Tesseract
         if not os.path.exists(pytesseract.pytesseract.tesseract_cmd):
+            logging.error("❌ Ошибка: Tesseract-OCR не найден!")
             print("❌ Ошибка: Tesseract-OCR не найден!")
             print("Пожалуйста, установите Tesseract-OCR и убедитесь, что путь корректный:")
             print(pytesseract.pytesseract.tesseract_cmd)
@@ -181,6 +229,7 @@ def main():
         if not recognized_text:
             return
         
+        logging.info("Обработка распознанного текста...")
         print("\nОбработка распознанного текста...")
         # Обрабатываем распознанный текст
         processed_text = process_text(recognized_text)
@@ -189,20 +238,25 @@ def main():
         with open(OUTPUT_FILE, "w", encoding="utf-8") as file:
             file.write(processed_text)
             
+        logging.info(f"✓ Результат сохранен в файл: {OUTPUT_FILE}")
         print(f"✓ Результат сохранен в файл: {OUTPUT_FILE}")
         
         # Создаем HTML-структуру для расписания
+        logging.info("Создание HTML-структуры расписания...")
         print("\nСоздание HTML-структуры расписания...")
         schedule_html = create_schedule_html(processed_text)
         
         # Обновляем index.html
+        logging.info("Обновление index.html...")
         print("\nОбновление index.html...")
         print(f"Содержимое schedule_html:\n{schedule_html}")
         update_index_html(schedule_html)
         
+        logging.info("✓ Все операции успешно завершены!")
         print("\n✓ Все операции успешно завершены!")
         
     except Exception as e:
+        logging.error(f"❌ Произошла ошибка: {str(e)}")
         print(f"\n❌ Произошла ошибка: {str(e)}")
 
 if __name__ == "__main__":
