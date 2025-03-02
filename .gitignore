@@ -1,7 +1,27 @@
-log/requests.log
-converts.txt
-schedule/input.txt
-schedule/result.txt
+# Ignore the virtual environment directory
+schedule/venv/
 
-schedule/input.txt
-schedule/result.txt
+# Ignore images
+schedule/images/
+
+# Ignore Python compiled files
+schedule/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore all .txt files
+schedule/*.txt
+
+# Ignore editor and IDE specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore backup files
+*.backup_*
