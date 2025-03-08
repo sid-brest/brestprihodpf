@@ -117,10 +117,10 @@ def process_text(input_text):
         if re.search(r'\b(?:Январ[ь|я]|Феврал[ь|я]|Март[а]?|Апрел[ь|я]|Ма[й|я]|Июн[ь|я]|Июл[ь|я]|Август[а]?|Сентябр[ь|я]|Октябр[ь|я]|Ноябр[ь|я]|Декабр[ь|я])\s*,\s*(?:Понедельник|Вторник|Сред[а|у]|Четверг|Пятниц[а|у]|Суббот[а|у]|Воскресенье)\s*', row, flags=re.IGNORECASE):
             output_text += f"<h3>{row}</h3>\n"
         else:
-            output_text += f"<br>{row.strip()}</br>\n"
+            output_text += f"<br />{row.strip()}\n"
 
-    # Remove spaces after <br> and <h3> tag
-    output_text = re.sub(r'<br>\s*', '<br>', output_text)
+    # Remove spaces after <br /> and <h3> tag
+    output_text = re.sub(r'<br />\s*', '<br />', output_text)
     output_text = re.sub(r'<h3>\s*', '<h3>', output_text)
     
     return output_text
