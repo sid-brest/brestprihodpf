@@ -1,4 +1,5 @@
 # Ignore the virtual environment directory
+.venv/
 schedule/venv/
 
 # Ignore images

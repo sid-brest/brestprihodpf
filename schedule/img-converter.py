@@ -1,5 +1,6 @@
 import re
 import os
+import platform
 from PIL import Image
 import pytesseract
 from pathlib import Path
@@ -7,8 +8,14 @@ import shutil
 from datetime import datetime
 import logging
 
-# Указываем путь к исполняемому файлу tesseract
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+# Определяем операционную систему
+OPERATING_SYSTEM = platform.system()
+
+# Устанавливаем путь к Tesseract в зависимости от операционной системы
+if OPERATING_SYSTEM == "Windows":
+    pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+else:  # Linux/Ubuntu
+    pytesseract.pytesseract.tesseract_cmd = r"/usr/bin/tesseract"
 
 # Пути к файлам и папкам
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -41,6 +48,8 @@ def setup_logging():
         encoding="utf-8",
     )
     logging.info("Логирование настроено.")
+    logging.info(f"Операционная система: {OPERATING_SYSTEM}")
+    logging.info(f"Путь к Tesseract: {pytesseract.pytesseract.tesseract_cmd}")
 
 
 def recognize_text_from_images():
@@ -247,19 +256,59 @@ def update_index_html(schedule_html):
             shutil.copy2(backup_file, INDEX_FILE)
 
 
+def check_tesseract():
+    """Проверяет наличие и версию Tesseract OCR"""
+    try:
+        if OPERATING_SYSTEM == "Windows":
+            if not os.path.exists(pytesseract.pytesseract.tesseract_cmd):
+                logging.error("❌ Ошибка: Tesseract-OCR не найден!")
+                print("❌ Ошибка: Tesseract-OCR не найден!")
+                print(
+                    "Пожалуйста, установите Tesseract-OCR и убедитесь, что путь корректный:"
+                )
+                print(pytesseract.pytesseract.tesseract_cmd)
+                return False
+        
+        # Проверка версии Tesseract
+        try:
+            tesseract_version = pytesseract.get_tesseract_version()
+            logging.info(f"Tesseract версия: {tesseract_version}")
+            print(f"Tesseract версия: {tesseract_version}")
+            
+            # Проверка наличия русского языкового пакета
+            langs = pytesseract.get_languages()
+            if 'rus' not in langs:
+                logging.error("❌ Ошибка: Русский языковой пакет для Tesseract не найден!")
+                print("❌ Ошибка: Русский языковой пакет для Tesseract не найден!")
+                print("Установите языковой пакет для русского языка (rus)")
+                if OPERATING_SYSTEM == "Linux":
+                    print("Для Ubuntu: sudo apt-get install tesseract-ocr-rus")
+                return False
+            
+            logging.info(f"Доступные языки Tesseract: {', '.join(langs)}")
+            return True
+            
+        except Exception as e:
+            logging.error(f"❌ Ошибка при проверке Tesseract: {str(e)}")
+            print(f"❌ Ошибка при проверке Tesseract: {str(e)}")
+            return False
+            
+    except Exception as e:
+        logging.error(f"❌ Ошибка при проверке Tesseract: {str(e)}")
+        print(f"❌ Ошибка при проверке Tesseract: {str(e)}")
+        return False
+
+
 def main():
     try:
         # Настраиваем логирование
         setup_logging()
+        
+        print(f"Операционная система: {OPERATING_SYSTEM}")
+        print(f"Путь к Tesseract: {pytesseract.pytesseract.tesseract_cmd}")
 
         # Проверяем наличие Tesseract
-        if not os.path.exists(pytesseract.pytesseract.tesseract_cmd):
-            logging.error("❌ Ошибка: Tesseract-OCR не найден!")
-            print("❌ Ошибка: Tesseract-OCR не найден!")
-            print(
-                "Пожалуйста, установите Tesseract-OCR и убедитесь, что путь корректный:"
-            )
-            print(pytesseract.pytesseract.tesseract_cmd)
+        if not check_tesseract():
             return
 
         # Распознаем текст с изображений
