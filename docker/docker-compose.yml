@@ -50,7 +50,7 @@ services:
     ports:
       - "9000:9000"
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:9000/api/status" , "||", "exit", "0"]
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/api/status || exit 0"]
       interval: 1m
       timeout: 10s
       retries: 3

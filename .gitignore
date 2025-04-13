@@ -36,3 +36,5 @@ Thumbs.db
 # Ignore backup files
 backups/
 
+# Ignore portainer
+docker/portainer-data/*
