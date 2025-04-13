@@ -5,6 +5,9 @@ schedule/venv/
 # Ignore images
 schedule/images/
 
+# Ignore Docker
+docker/.env
+
 # Ignore text
 schedule/text/
 
@@ -32,3 +35,4 @@ Thumbs.db
 
 # Ignore backup files
 backups/
+
