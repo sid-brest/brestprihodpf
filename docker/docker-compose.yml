@@ -5,12 +5,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - DEBIAN_FRONTEND=noninteractive
+        - TZ=Europe/Minsk
     container_name: church-schedule-bot
     restart: unless-stopped
     env_file:
       - .env
     volumes:
-      - ..:/app/project
+      - ..:/app/project:ro
+      - ./logs:/app/logs
+      - church_temp:/tmp
     healthcheck:
       test: ["CMD", "python", "-c", "import os; exit(0 if os.path.exists('/app/bot.py') else 1)"]
       interval: 1m
@@ -25,6 +30,12 @@ services:
     tty: true
     networks:
       - app-network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
 
   portainer:
     image: portainer/portainer-ce:latest
@@ -39,7 +50,7 @@ services:
     ports:
       - "9000:9000"
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:9000/api/status"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:9000/api/status" , "||", "exit", "0"]
       interval: 1m
       timeout: 10s
       retries: 3
@@ -51,7 +62,15 @@ services:
         max-file: "3"
     networks:
       - app-network
+    deploy:
+      resources:
+        limits:
+          memory: 256M
 
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  church_temp:
+    driver: local

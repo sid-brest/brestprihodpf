@@ -31,24 +31,57 @@ log_warning() {
 # Определение текущего каталога и структуры проекта
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-DOCKER_DIR="${PROJECT_ROOT}/docker"
+DOCKER_DIR="${SCRIPT_DIR}"
 SETUP_SCRIPT="${DOCKER_DIR}/setup.sh"
 
 log_info "Запуск из директории: ${SCRIPT_DIR}"
 log_info "Корневая директория проекта: ${PROJECT_ROOT}"
 
-# Проверка существования docker директории
-if [ ! -d "$DOCKER_DIR" ]; then
-    log_error "Директория Docker не найдена: $DOCKER_DIR"
-    log_error "Проверьте структуру проекта и запустите скрипт из корректного местоположения."
-    exit 1
+# Проверка прав доступа к Docker
+if ! docker info &>/dev/null; then
+    log_warning "Нет прав доступа к Docker. Проверка наличия пользователя в группе docker..."
+    
+    # Проверяем есть ли пользователь в группе docker
+    if groups | grep -q docker; then
+        log_info "Пользователь в группе docker, но возможно изменения прав не применены."
+        log_info "Применяем изменения для текущей сессии..."
+        
+        # Запуск с использованием newgrp
+        exec newgrp docker << EOF
+        bash "${BASH_SOURCE[0]}"
+EOF
+        exit 0
+    else
+        log_warning "Пользователь не в группе docker. Требуются права администратора."
+        
+        # Проверка можно ли использовать sudo
+        if command -v sudo &>/dev/null; then
+            log_info "Запуск с правами администратора через sudo..."
+            exec sudo "$0"
+            exit 0
+        else
+            log_error "Команда sudo недоступна. Добавьте пользователя в группу docker:"
+            log_info "sudo usermod -aG docker $USER && newgrp docker"
+            exit 1
+        fi
+    fi
 fi
 
 # Проверка существования setup.sh
 if [ ! -f "$SETUP_SCRIPT" ]; then
-    log_error "Установочный скрипт не найден: $SETUP_SCRIPT"
-    log_error "Убедитесь, что файл setup.sh существует в директории Docker."
-    exit 1
+    log_warning "Установочный скрипт не найден: $SETUP_SCRIPT"
+    log_info "Создание базового скрипта setup.sh..."
+    
+    cat > "$SETUP_SCRIPT" << 'EOF'
+#!/bin/bash
+echo "Установка Docker и необходимых компонентов..."
+sudo apt-get update && sudo apt-get install -y docker.io docker-compose
+sudo usermod -aG docker $USER
+echo "Установка завершена. Перезапустите терминал или выполните: newgrp docker"
+EOF
+    
+    chmod +x "$SETUP_SCRIPT"
+    log_success "Скрипт setup.sh создан."
 fi
 
 # Проверка прав на выполнение setup.sh
@@ -63,93 +96,137 @@ if [ ! -x "$SETUP_SCRIPT" ]; then
     log_success "Права установлены успешно."
 fi
 
+# Проверка существования docker-compose.yml
+if [ ! -f "${DOCKER_DIR}/docker-compose.yml" ]; then
+    log_error "Файл docker-compose.yml не найден в ${DOCKER_DIR}"
+    log_error "Проверьте структуру проекта и запустите скрипт из корректного местоположения."
+    exit 1
+fi
+
+# Проверка наличия директории bot
+if [ ! -d "${DOCKER_DIR}/bot" ] && [ ! -d "${PROJECT_ROOT}/bot" ]; then
+    log_warning "Директория bot не найдена ни в ${DOCKER_DIR}, ни в ${PROJECT_ROOT}"
+    log_info "Создание базовой структуры директорий..."
+    mkdir -p "${DOCKER_DIR}/bot"
+    touch "${DOCKER_DIR}/bot/requirements.txt"
+    log_success "Базовая структура создана."
+fi
+
+# Проверка существования файла .env
+ENV_FILE="${DOCKER_DIR}/.env"
+if [ ! -f "$ENV_FILE" ]; then
+    log_warning "Файл .env не найден. Создается из шаблона..."
+    
+    cat > "$ENV_FILE" << 'EOF'
+# Токен бота телеграм
+TELEGRAM_TOKEN=
+
+# ID администратора в телеграме (только этот пользователь сможет использовать бота)
+ADMIN_USER_ID=
+
+# Данные для GitHub
+REPO_URL=
+GIT_USERNAME=
+GIT_EMAIL=
+GIT_TOKEN=
+
+# Пути к файлам проекта
+PROJECT_PATH=/app/project
+INDEX_HTML_PATH=/app/project/index.html
+EOF
+    
+    chmod 600 "$ENV_FILE"
+    log_warning "Создан файл .env. Пожалуйста, отредактируйте его перед запуском бота."
+    log_info "Выполните: nano ${ENV_FILE}"
+    
+    # Проверка заполнен ли .env
+    log_info "Нажмите Enter для продолжения после редактирования файла, или Ctrl+C для выхода."
+    read -r
+fi
+
+# Проверка, заполнен ли .env
+if [ -f "$ENV_FILE" ]; then
+    if ! grep -q "TELEGRAM_TOKEN=." "$ENV_FILE"; then
+        log_warning "Токен Telegram бота не задан в файле .env"
+        log_info "Пожалуйста, отредактируйте файл и укажите токен."
+        exit 1
+    fi
+fi
+
 # Проверка установки Docker
-if ! command -v docker &> /dev/null; then
+if ! command -v docker &>/dev/null; then
     log_warning "Docker не установлен. Необходима установка Docker."
     log_info "Запуск установочного скрипта..."
     
-    # Проверка прав администратора
-    if [ "$EUID" -ne 0 ]; then
-        log_warning "Для установки Docker требуются права администратора."
-        log_info "Запуск скрипта с sudo..."
-        sudo "$SETUP_SCRIPT"
-        if [ $? -ne 0 ]; then
-            log_error "Не удалось запустить установочный скрипт с sudo."
-            exit 1
+    # Запуск setup.sh
+    "$SETUP_SCRIPT"
+    if [ $? -ne 0 ]; then
+        log_error "Не удалось выполнить установочный скрипт."
+        exit 1
+    fi
+    
+    log_info "Пожалуйста, перезапустите терминал или выполните: newgrp docker"
+    log_info "Затем запустите скрипт снова."
+    exit 0
+else
+    log_success "Docker установлен."
+    
+    # Проверка Docker Compose
+    if ! command -v docker-compose &>/dev/null; then
+        log_warning "Docker Compose не установлен."
+        log_info "Проверка наличия docker compose plugin..."
+        
+        if docker compose version &>/dev/null; then
+            log_success "Найден docker compose plugin."
+            # Создаем алиас
+            alias docker-compose="docker compose"
+        else
+            log_warning "Docker Compose не найден. Попытка установки..."
+            "$SETUP_SCRIPT"
+            if [ $? -ne 0 ]; then
+                log_error "Не удалось установить Docker Compose."
+                exit 1
+            fi
         fi
     else
-        # Если скрипт уже запущен с правами администратора
-        "$SETUP_SCRIPT"
-        if [ $? -ne 0 ]; then
-            log_error "Не удалось выполнить установочный скрипт."
-            exit 1
-        fi
+        log_success "Docker Compose установлен."
+    fi
+fi
+
+# Запуск контейнеров
+log_info "Запуск контейнеров..."
+cd "$DOCKER_DIR" || exit 1
+
+# Остановка существующих контейнеров
+docker-compose down 2>/dev/null
+
+# Сборка и запуск контейнеров
+log_info "Сборка и запуск контейнеров..."
+if ! docker-compose build --no-cache; then
+    log_error "Не удалось собрать образы Docker."
+    log_info "Попытка запуска с существующими образами..."
+    
+    # Пробуем запустить с существующими образами
+    if ! docker-compose up -d; then
+        log_error "Не удалось запустить контейнеры."
+        exit 1
     fi
 else
-    log_success "Docker уже установлен."
-    
-    # Проверка запуска Docker
-    if ! docker info &>/dev/null; then
-        log_warning "Docker установлен, но не запущен или требуются права администратора."
-        log_info "Попытка запуска службы Docker..."
-        
-        sudo systemctl start docker
-        if [ $? -ne 0 ]; then
-            log_error "Не удалось запустить службу Docker."
-            exit 1
-        fi
-        log_success "Служба Docker запущена."
+    # Запуск контейнеров
+    if ! docker-compose up -d; then
+        log_error "Не удалось запустить контейнеры."
+        exit 1
     fi
-    
-    # Проверка существования контейнеров
-    if docker ps -a | grep -q "church-schedule-bot"; then
-        log_info "Найден контейнер church-schedule-bot."
-        
-        # Проверка, запущен ли контейнер
-        if docker ps | grep -q "church-schedule-bot"; then
-            log_success "Бот уже запущен."
-            log_info "Для перезапуска используйте: docker-compose restart church-bot"
-            log_info "Для просмотра логов: docker logs church-schedule-bot"
-        else
-            log_warning "Бот не запущен."
-            log_info "Запуск бота..."
-            
-            cd "$DOCKER_DIR" && docker-compose up -d
-            if [ $? -ne 0 ]; then
-                log_error "Не удалось запустить бота."
-                exit 1
-            fi
-            log_success "Бот успешно запущен!"
-        fi
-    else
-        log_warning "Контейнер бота не найден. Возможно, необходима первичная настройка."
-        log_info "Переход в директорию Docker и запуск docker-compose..."
-        
-        cd "$DOCKER_DIR" || exit 1
-        
-        # Проверка существования файла .env
-        if [ ! -f ".env" ]; then
-            log_warning "Файл .env не найден. Создается из шаблона..."
-            
-            if [ -f ".env.template" ]; then
-                cp ".env.template" ".env"
-                log_warning "Пожалуйста, отредактируйте файл .env перед запуском."
-                log_info "Выполните: nano ${DOCKER_DIR}/.env"
-                exit 0
-            else
-                log_error "Шаблон .env.template не найден. Невозможно создать конфигурацию."
-                exit 1
-            fi
-        fi
-        
-        # Запуск docker-compose
-        docker-compose up -d
-        if [ $? -ne 0 ]; then
-            log_error "Не удалось запустить контейнеры."
-            exit 1
-        fi
-        log_success "Контейнеры успешно запущены!"
-    fi
+fi
+
+# Проверка запущены ли контейнеры
+if docker ps | grep -q "church-schedule-bot"; then
+    log_success "Бот успешно запущен!"
+    log_info "Для просмотра логов выполните: docker logs church-schedule-bot -f"
+else
+    log_error "Бот не запустился."
+    log_info "Проверьте логи: docker-compose logs"
+    exit 1
 fi
 
 # Вывод информации о доступе к Portainer

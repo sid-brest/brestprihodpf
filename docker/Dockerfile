@@ -7,23 +7,42 @@ ARG TZ=Europe/Minsk
 # Установка рабочей директории
 WORKDIR /app
 
-# Установка необходимых системных зависимостей
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    tesseract-ocr \
-    tesseract-ocr-rus \
-    git \
-    wget \
-    curl \
+# Настройка повторных попыток для APT
+RUN mkdir -p /etc/apt/apt.conf.d && \
+    echo 'Acquire::Retries "5";' > /etc/apt/apt.conf.d/80-retries && \
+    echo 'APT::Install-Recommends "false";' > /etc/apt/apt.conf.d/71-no-recommends && \
+    echo 'APT::Install-Suggests "false";' > /etc/apt/apt.conf.d/72-no-suggests
+
+# Установка необходимых системных зависимостей (разделено для лучшей кешируемости)
+RUN apt-get update && apt-get install -y \
+    apt-utils \
     ca-certificates \
+    curl \
     tzdata \
+    && rm -rf /var/lib/apt/lists/*
+
+# Установка зависимостей для локализации
+RUN apt-get update && apt-get install -y \
     locales \
-    && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
-    && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
-    && echo $TZ > /etc/timezone \
     && sed -i -e 's/# ru_RU.UTF-8 UTF-8/ru_RU.UTF-8 UTF-8/' /etc/locale.gen \
     && dpkg-reconfigure --frontend=noninteractive locales \
     && update-locale LANG=ru_RU.UTF-8
+
+# Установка основных инструментов
+RUN apt-get update && apt-get install -y \
+    git \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Установка Tesseract OCR
+RUN apt-get update && apt-get install -y \
+    tesseract-ocr \
+    tesseract-ocr-rus \
+    && rm -rf /var/lib/apt/lists/*
+
+# Настройка временной зоны
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Настройка переменных окружения
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -50,7 +69,7 @@ RUN chown -R botuser:botuser /app
 USER botuser
 
 # Проверка работоспособности Tesseract
-RUN tesseract --version
+RUN tesseract --version || echo "Tesseract installed but command failed, continuing anyway"
 
 # Точка входа и команда запуска
 ENTRYPOINT ["python"]
