@@ -193,6 +193,31 @@ else
     fi
 fi
 
+# Удаление конфликтующих контейнеров
+log_info "Проверка наличия конфликтующих контейнеров..."
+CONTAINERS_TO_REMOVE=()
+
+if docker ps -a --format '{{.Names}}' | grep -q "^portainer$"; then
+    CONTAINERS_TO_REMOVE+=("portainer")
+fi
+
+if docker ps -a --format '{{.Names}}' | grep -q "^church-schedule-bot$"; then
+    CONTAINERS_TO_REMOVE+=("church-schedule-bot")
+fi
+
+if [ ${#CONTAINERS_TO_REMOVE[@]} -gt 0 ]; then
+    log_warning "Найдены существующие контейнеры с конфликтующими именами: ${CONTAINERS_TO_REMOVE[*]}"
+    log_info "Удаление конфликтующих контейнеров..."
+    docker rm -f "${CONTAINERS_TO_REMOVE[@]}" > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        log_success "Конфликтующие контейнеры успешно удалены."
+    else
+        log_error "Не удалось удалить конфликтующие контейнеры."
+        log_info "Попробуйте выполнить вручную: docker rm -f ${CONTAINERS_TO_REMOVE[*]}"
+        exit 1
+    fi
+fi
+
 # Запуск контейнеров
 log_info "Запуск контейнеров..."
 cd "$DOCKER_DIR" || exit 1
