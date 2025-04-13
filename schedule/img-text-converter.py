@@ -7,6 +7,7 @@ from pathlib import Path
 import shutil
 from datetime import datetime
 import logging
+import docx  # Для работы с DOCX файлами
 
 # Определяем операционную систему
 OPERATING_SYSTEM = platform.system()
@@ -21,6 +22,7 @@ else:  # Linux/Ubuntu
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PARENT_DIR = os.path.dirname(SCRIPT_DIR)
 IMAGES_FOLDER = os.path.join(SCRIPT_DIR, "images")
+TEXT_FOLDER = os.path.join(SCRIPT_DIR, "text")  # Новая папка для текстовых файлов
 OUTPUT_FILE = os.path.join(SCRIPT_DIR, "result.txt")
 INDEX_FILE = os.path.join(PARENT_DIR, "index.html")
 LOG_DIR = os.path.join(SCRIPT_DIR, "logs")
@@ -50,6 +52,97 @@ def setup_logging():
     logging.info("Логирование настроено.")
     logging.info(f"Операционная система: {OPERATING_SYSTEM}")
     logging.info(f"Путь к Tesseract: {pytesseract.pytesseract.tesseract_cmd}")
+
+
+def check_files_in_folders():
+    """Проверяет наличие файлов в папках images и text"""
+    # Создаем папки, если они не существуют
+    Path(IMAGES_FOLDER).mkdir(exist_ok=True)
+    Path(TEXT_FOLDER).mkdir(exist_ok=True)
+    
+    # Получаем списки файлов
+    image_files = [
+        f for f in os.listdir(IMAGES_FOLDER) 
+        if f.lower().endswith((".png", ".jpg", ".jpeg"))
+    ]
+    
+    text_files = [
+        f for f in os.listdir(TEXT_FOLDER)
+        if f.lower().endswith((".txt", ".docx"))
+    ]
+    
+    return image_files, text_files
+
+
+def extract_text_from_txt(file_path):
+    """Извлекает текст из TXT файла"""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            return file.read()
+    except UnicodeDecodeError:
+        # Пробуем другие кодировки, если utf-8 не работает
+        try:
+            with open(file_path, 'r', encoding='cp1251') as file:
+                return file.read()
+        except Exception as e:
+            logging.error(f"Не удалось прочитать файл {file_path}: {str(e)}")
+            return ""
+
+
+def extract_text_from_docx(file_path):
+    """Извлекает текст из DOCX файла"""
+    try:
+        doc = docx.Document(file_path)
+        text = "\n".join([paragraph.text for paragraph in doc.paragraphs])
+        return text
+    except Exception as e:
+        logging.error(f"Не удалось прочитать файл {file_path}: {str(e)}")
+        return ""
+
+
+def read_text_from_files():
+    """Читает текст из файлов в папке text"""
+    extracted_text = ""
+    
+    # Получаем список текстовых файлов
+    text_files = [
+        f for f in os.listdir(TEXT_FOLDER)
+        if f.lower().endswith((".txt", ".docx"))
+    ]
+    
+    if not text_files:
+        logging.warning("В папке text нет текстовых файлов.")
+        print("В папке text нет текстовых файлов.")
+        print(f"Пожалуйста, добавьте файлы DOCX или TXT в папку: {TEXT_FOLDER}")
+        return ""
+    
+    logging.info(f"Найдено текстовых файлов: {len(text_files)}")
+    print(f"Найдено текстовых файлов: {len(text_files)}")
+    print("Начинаю чтение текстовых файлов...")
+    
+    # Обрабатываем каждый файл
+    for i, text_file in enumerate(text_files, 1):
+        file_path = os.path.join(TEXT_FOLDER, text_file)
+        try:
+            logging.info(f"Обработка файла {i}/{len(text_files)}: {text_file}")
+            print(f"Обработка файла {i}/{len(text_files)}: {text_file}")
+            
+            # Определяем формат и извлекаем текст
+            if text_file.lower().endswith(".txt"):
+                text = extract_text_from_txt(file_path)
+            elif text_file.lower().endswith(".docx"):
+                text = extract_text_from_docx(file_path)
+            
+            extracted_text += text + "\n"
+            logging.info(f"✓ Успешно извлечен текст из файла: {text_file}")
+            print(f"✓ Успешно извлечен текст из файла: {text_file}")
+            
+        except Exception as e:
+            logging.error(f"❌ Ошибка при обработке файла {text_file}: {str(e)}")
+            print(f"❌ Ошибка при обработке файла {text_file}: {str(e)}")
+            continue
+    
+    return extracted_text
 
 
 def recognize_text_from_images():
@@ -299,28 +392,71 @@ def check_tesseract():
         return False
 
 
+def get_user_choice(image_files, text_files):
+    """Запрашивает у пользователя, какой источник использовать"""
+    print("\nНайдены файлы для обработки:")
+    
+    if image_files:
+        print(f"1. Изображения в папке '{IMAGES_FOLDER}' ({len(image_files)} файлов)")
+    
+    if text_files:
+        print(f"2. Текстовые файлы в папке '{TEXT_FOLDER}' ({len(text_files)} файлов)")
+        
+    if image_files and text_files:
+        valid_choices = ['1', '2']
+        choice = ""
+        while choice not in valid_choices:
+            choice = input("\nВыберите источник данных (1 - изображения, 2 - текстовые файлы): ")
+            if choice not in valid_choices:
+                print("Неверный выбор. Пожалуйста, введите 1 или 2.")
+        
+        return int(choice)
+    elif image_files:
+        print("\nБудут использованы файлы изображений.")
+        return 1
+    else:
+        print("\nБудут использованы текстовые файлы.")
+        return 2
+
+
 def main():
     try:
         # Настраиваем логирование
         setup_logging()
         
         print(f"Операционная система: {OPERATING_SYSTEM}")
-        print(f"Путь к Tesseract: {pytesseract.pytesseract.tesseract_cmd}")
-
-        # Проверяем наличие Tesseract
-        if not check_tesseract():
+        
+        # Проверяем наличие файлов в обеих папках
+        image_files, text_files = check_files_in_folders()
+        
+        if not image_files and not text_files:
+            logging.warning("Не найдено файлов для обработки ни в images, ни в text папках")
+            print("\nНе найдено файлов для обработки!")
+            print(f"Пожалуйста, добавьте изображения в папку '{IMAGES_FOLDER}'")
+            print(f"или текстовые файлы (docx, txt) в папку '{TEXT_FOLDER}'")
+            return
+            
+        # Запрашиваем выбор источника, если доступно несколько
+        source_choice = get_user_choice(image_files, text_files)
+        
+        # Получаем текст в зависимости от выбора пользователя
+        if source_choice == 1:
+            # Проверяем наличие Tesseract для распознавания изображений
+            if not check_tesseract():
+                return
+                
+            extracted_text = recognize_text_from_images()
+        else:
+            extracted_text = read_text_from_files()
+            
+        if not extracted_text:
+            print("Не удалось извлечь текст из выбранных файлов.")
             return
 
-        # Распознаем текст с изображений
-        recognized_text = recognize_text_from_images()
-
-        if not recognized_text:
-            return
-
-        logging.info("Обработка распознанного текста...")
-        print("\nОбработка распознанного текста...")
-        # Обрабатываем распознанный текст
-        processed_text = process_text(recognized_text)
+        logging.info("Обработка извлеченного текста...")
+        print("\nОбработка извлеченного текста...")
+        # Обрабатываем извлеченный текст
+        processed_text = process_text(extracted_text)
 
         # Записываем результат в файл
         with open(OUTPUT_FILE, "w", encoding="utf-8") as file:
@@ -337,7 +473,6 @@ def main():
         # Обновляем index.html
         logging.info("Обновление index.html...")
         print("\nОбновление index.html...")
-        print(f"Содержимое schedule_html:\n{schedule_html}")
         update_index_html(schedule_html)
 
         logging.info("✓ Все операции успешно завершены!")

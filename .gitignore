@@ -5,6 +5,9 @@ schedule/venv/
 # Ignore images
 schedule/images/
 
+# Ignore text
+schedule/text/
+
 # Ignore logs
 schedule/logs/
 
