@@ -38,3 +38,4 @@ backups/
 
 # Ignore portainer
 docker/portainer-data/*
+docker/update.sh
