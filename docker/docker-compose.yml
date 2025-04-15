@@ -37,36 +37,6 @@ services:
         reservations:
           memory: 128M
 
-  portainer:
-    image: portainer/portainer-ce:latest
-    container_name: portainer
-    restart: unless-stopped
-    security_opt:
-      - no-new-privileges:true
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./portainer-data:/data
-    ports:
-      - "9000:9000"
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:9000/api/status || exit 0"]
-      interval: 1m
-      timeout: 10s
-      retries: 3
-      start_period: 30s
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    networks:
-      - app-network
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-
 networks:
   app-network:
     driver: bridge

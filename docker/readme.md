@@ -173,12 +173,6 @@ INDEX_HTML_PATH=/app/project/index.html
   docker-compose down
   ```
 
-### Доступ к Portainer
-
-Для управления Docker через веб-интерфейс используйте Portainer:
-- URL: http://ваш_ip_адрес:9000
-- При первом входе создайте учетную запись администратора
-
 ## Структура проекта
 
 ```

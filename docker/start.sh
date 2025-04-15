@@ -197,10 +197,6 @@ fi
 log_info "Проверка наличия конфликтующих контейнеров..."
 CONTAINERS_TO_REMOVE=()
 
-if docker ps -a --format '{{.Names}}' | grep -q "^portainer$"; then
-    CONTAINERS_TO_REMOVE+=("portainer")
-fi
-
 if docker ps -a --format '{{.Names}}' | grep -q "^church-schedule-bot$"; then
     CONTAINERS_TO_REMOVE+=("church-schedule-bot")
 fi
@@ -252,11 +248,6 @@ else
     log_error "Бот не запустился."
     log_info "Проверьте логи: docker-compose logs"
     exit 1
-fi
-
-# Вывод информации о доступе к Portainer
-if docker ps | grep -q "portainer"; then
-    log_success "Portainer запущен и доступен по адресу: http://localhost:9000"
 fi
 
 log_success "Операция завершена успешно!"
