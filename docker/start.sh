@@ -112,6 +112,15 @@ if [ ! -d "${DOCKER_DIR}/bot" ] && [ ! -d "${PROJECT_ROOT}/bot" ]; then
     log_success "Базовая структура создана."
 fi
 
+# Создание директории для данных, если её нет
+DATA_DIR="${DOCKER_DIR}/data"
+if [ ! -d "$DATA_DIR" ]; then
+    log_info "Создание директории для данных подписчиков..."
+    mkdir -p "$DATA_DIR"
+    chmod 777 "$DATA_DIR"  # Даем широкие права для доступа из контейнера
+    log_success "Директория для данных создана: $DATA_DIR"
+fi
+
 # Проверка существования файла .env
 ENV_FILE="${DOCKER_DIR}/.env"
 if [ ! -f "$ENV_FILE" ]; then
@@ -130,9 +139,16 @@ GIT_USERNAME=
 GIT_EMAIL=
 GIT_TOKEN=
 
+# Данные для подключения к хостингу
+HOSTING_PATH=prihodpf@vh124.hoster.by
+HOSTING_CERT=/app/ssh/id_rsa
+HOSTING_PASSPHRASE=b54=nr*Dzq)y
+HOSTING_DIR=/home/prihodpf/public_html
+
 # Пути к файлам проекта
 PROJECT_PATH=/app/project
 INDEX_HTML_PATH=/app/project/index.html
+DATABASE_PATH=/app/data/subscribers.db
 EOF
     
     chmod 600 "$ENV_FILE"
@@ -142,6 +158,31 @@ EOF
     # Проверка заполнен ли .env
     log_info "Нажмите Enter для продолжения после редактирования файла, или Ctrl+C для выхода."
     read -r
+fi
+
+# Проверка директории для SSH ключей
+SSH_DIR="${DOCKER_DIR}/ssh"
+if [ ! -d "$SSH_DIR" ]; then
+    log_info "Создание директории для SSH ключей..."
+    mkdir -p "$SSH_DIR"
+    chmod 700 "$SSH_DIR"  # Безопасные права доступа
+    log_success "Директория для SSH ключей создана: $SSH_DIR"
+    
+    log_warning "Пожалуйста, поместите ваш приватный ключ (id_rsa) в директорию $SSH_DIR"
+    log_info "Нажмите Enter для продолжения после добавления ключа, или Ctrl+C для выхода."
+    read -r
+fi
+
+# Проверка наличия SSH ключа
+if [ ! -f "${SSH_DIR}/id_rsa" ]; then
+    log_warning "SSH ключ не найден в директории ${SSH_DIR}"
+    log_info "Пожалуйста, поместите ваш приватный ключ (id_rsa) в директорию $SSH_DIR"
+    log_info "Нажмите Enter для продолжения после добавления ключа, или Ctrl+C для выхода."
+    read -r
+else
+    # Устанавливаем правильные разрешения для ключа
+    chmod 600 "${SSH_DIR}/id_rsa"
+    log_success "SSH ключ найден и настроен."
 fi
 
 # Проверка, заполнен ли .env

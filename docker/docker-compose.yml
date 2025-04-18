@@ -13,6 +13,8 @@ services:
     volumes:
       - ..:/app/project:ro
       - ./logs:/app/logs
+      - ./data:/app/data
+      - ./ssh:/app/ssh:ro
       - church_temp:/tmp
     healthcheck:
       test: ["CMD", "python", "-c", "import os; exit(0 if os.path.exists('/app/bot.py') else 1)"]
@@ -34,6 +36,11 @@ services:
           memory: 512M
         reservations:
           memory: 128M
+    # Для поддержки подключения по SSH
+    cap_add:
+      - NET_ADMIN
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
 
 networks:
   app-network:

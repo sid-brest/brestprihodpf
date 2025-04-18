@@ -17,9 +17,10 @@ import time
 from datetime import datetime, timedelta
 from typing import Dict, List, Tuple, Optional, Any
 from dotenv import load_dotenv
-
+from ssh_utils import update_hosting, test_ssh_connection
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackQueryHandler, ContextTypes, ConversationHandler
+
 
 # Импортируем функции из текстового конвертера
 from img_text_converter import (
@@ -57,9 +58,13 @@ GIT_EMAIL = os.environ.get("GIT_EMAIL")  # Email на GitHub
 GIT_TOKEN = os.environ.get("GIT_TOKEN")  # Персональный токен доступа GitHub
 PROJECT_PATH = os.environ.get("PROJECT_PATH", "/app/project")  # Путь к проекту
 INDEX_HTML_PATH = os.environ.get("INDEX_HTML_PATH", "/app/project/index.html")  # Путь к index.html
-HOSTING_PATH = os.environ.get("HOSTING_PATH", "")  # Путь к папке на хостинге
-HOSTING_CERT = os.environ.get("HOSTING_CERT", "")  # Путь к сертификату для хостинга
 DATABASE_PATH = os.environ.get("DATABASE_PATH", "/app/data/subscribers.db")  # Путь к базе данных
+
+# Константы для подключения к хостингу
+HOSTING_PATH = os.environ.get("HOSTING_PATH", "")  # Хост для подключения (user@hostname)
+HOSTING_CERT = os.environ.get("HOSTING_CERT", "")  # Путь к приватному ключу SSH
+HOSTING_PASSPHRASE = os.environ.get("HOSTING_PASSPHRASE", "")  # Парольная фраза для ключа
+HOSTING_DIR = os.environ.get("HOSTING_DIR", "/home/prihodpf/public_html")  # Директория на хостинге
 
 # Состояния для ConversationHandler
 SCHEDULE_TIME, CONFIRM_REBOOT, COMPOSE_MESSAGE, CONFIRM_BROADCAST = range(4)
@@ -1767,6 +1772,253 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         for file in os.listdir(TEXT_FOLDER):
             os.remove(os.path.join(TEXT_FOLDER, file))
 
+# Добавим обработчики для различных вариантов планирования
+async def handle_schedule_selection(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Обрабатывает выбор типа расписания"""
+    query = update.callback_query
+    await query.answer()
+    
+    if query.data == "cancel_schedule":
+        await query.edit_message_text("❌ Планирование отменено.")
+        context.user_data.pop('conversation_active', None)
+        return ConversationHandler.END
+    
+    # Сохраняем тип расписания
+    context.user_data['schedule_type'] = query.data
+    
+    if query.data == "schedule_daily":
+        await query.edit_message_text(
+            "🕙 Ежедневное обновление\n\n"
+            "Укажите время в формате ЧЧ:ММ, например, 03:00"
+        )
+    elif query.data == "schedule_weekly":
+        keyboard = [
+            [
+                InlineKeyboardButton("Пн", callback_data="day_1"),
+                InlineKeyboardButton("Вт", callback_data="day_2"),
+                InlineKeyboardButton("Ср", callback_data="day_3")
+            ],
+            [
+                InlineKeyboardButton("Чт", callback_data="day_4"),
+                InlineKeyboardButton("Пт", callback_data="day_5"),
+                InlineKeyboardButton("Сб", callback_data="day_6")
+            ],
+            [
+                InlineKeyboardButton("Вс", callback_data="day_0"),
+                InlineKeyboardButton("❌ Отмена", callback_data="cancel_schedule")
+            ]
+        ]
+        
+        await query.edit_message_text(
+            "📅 Еженедельное обновление\n\n"
+            "Выберите день недели:",
+            reply_markup=InlineKeyboardMarkup(keyboard)
+        )
+        return SCHEDULE_TIME  # Особое состояние для выбора дня недели
+    elif query.data == "schedule_custom":
+        await query.edit_message_text(
+            "📆 Указать дату и время\n\n"
+            "Пожалуйста, укажите дату и время в формате:\n"
+            "<b>ГГГГ-ММ-ДД ЧЧ:ММ</b>\n\n"
+            "Например: 2025-05-01 12:00",
+            parse_mode="HTML"
+        )
+    else:
+        await query.edit_message_text("❌ Неизвестный тип расписания. Планирование отменено.")
+        context.user_data.pop('conversation_active', None)
+        return ConversationHandler.END
+    
+    return SCHEDULE_TIME
+
+async def handle_weekly_day_selection(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Обрабатывает выбор дня недели для еженедельного обновления"""
+    query = update.callback_query
+    await query.answer()
+    
+    if query.data == "cancel_schedule":
+        await query.edit_message_text("❌ Планирование отменено.")
+        context.user_data.pop('conversation_active', None)
+        return ConversationHandler.END
+    
+    # Получаем день недели (0-6, где 0=воскресенье)
+    day = int(query.data.split('_')[1])
+    context.user_data['schedule_day'] = day
+    
+    # Запрашиваем время
+    await query.edit_message_text(
+        f"📅 Еженедельное обновление ({['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'][day]})\n\n"
+        "Укажите время в формате ЧЧ:ММ, например, 03:00"
+    )
+    
+    return SCHEDULE_TIME
+
+# Обработчик для ввода времени для различных типов расписания
+async def process_schedule_time(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Обрабатывает ввод времени для планирования"""
+    user_id = update.effective_user.id
+    
+    if str(user_id) != ADMIN_USER_ID:
+        context.user_data.pop('conversation_active', None)
+        return ConversationHandler.END
+    
+    schedule_type = context.user_data.get('schedule_type', '')
+    
+    if schedule_type == "schedule_daily":
+        # Обрабатываем ежедневное расписание
+        time_input = update.message.text.strip()
+        
+        # Проверяем формат времени
+        try:
+            hour, minute = map(int, time_input.split(':'))
+            if hour < 0 or hour > 23 or minute < 0 or minute > 59:
+                raise ValueError("Некорректное время")
+            
+            # Сохраняем время
+            context.user_data['schedule_time'] = time_input
+            
+            # Создаем задачу
+            now = datetime.now()
+            schedule_time = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+            
+            # Если время уже прошло сегодня, переносим на завтра
+            if schedule_time <= now:
+                schedule_time = schedule_time + timedelta(days=1)
+            
+            # Форматируем время для вывода
+            scheduled_time_str = schedule_time.strftime("%Y-%m-%d %H:%M")
+            
+            # Добавляем задачу в планировщик
+            job = context.job_queue.run_daily(
+                scheduled_pull_task,
+                time=schedule_time.time(),
+                days=(0, 1, 2, 3, 4, 5, 6),  # Все дни недели
+                data={
+                    'chat_id': update.effective_chat.id,
+                    'description': f"Ежедневное обновление хостинга в {time_input}"
+                }
+            )
+            
+            # Сохраняем информацию о задаче
+            task_info = {
+                'job_id': job.job_id,
+                'type': 'daily',
+                'time': time_input,
+                'description': f"Ежедневное обновление хостинга в {time_input}",
+                'created_at': now.strftime("%Y-%m-%d %H:%M:%S")
+            }
+            USAGE_STATS["scheduled_updates"].append(task_info)
+            save_scheduled_tasks()
+            
+            await update.message.reply_text(
+                f"✅ Запланировано ежедневное обновление хостинга в {time_input}\n\n"
+                f"Следующее обновление: {scheduled_time_str}"
+            )
+            
+        except Exception as e:
+            logger.error(f"Ошибка при обработке времени: {str(e)}")
+            await update.message.reply_text(
+                "❌ Некорректный формат времени. Пожалуйста, укажите время в формате ЧЧ:ММ"
+            )
+            return SCHEDULE_TIME
+    
+    elif schedule_type == "schedule_weekly":
+        # Обрабатываем еженедельное расписание
+        time_input = update.message.text.strip()
+        day = context.user_data.get('schedule_day', 0)
+        day_names = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота']
+        
+        # Проверяем формат времени
+        try:
+            hour, minute = map(int, time_input.split(':'))
+            if hour < 0 or hour > 23 or minute < 0 or minute > 59:
+                raise ValueError("Некорректное время")
+            
+            # Сохраняем время
+            context.user_data['schedule_time'] = time_input
+            
+            # Создаем задачу
+            now = datetime.now()
+            
+            # Добавляем задачу в планировщик
+            job = context.job_queue.run_daily(
+                scheduled_pull_task,
+                time=time(hour, minute),
+                days=(day,),  # Только выбранный день недели
+                data={
+                    'chat_id': update.effective_chat.id,
+                    'description': f"Еженедельное обновление хостинга ({day_names[day]}) в {time_input}"
+                }
+            )
+            
+            # Сохраняем информацию о задаче
+            task_info = {
+                'job_id': job.job_id,
+                'type': 'weekly',
+                'day': day,
+                'time': time_input,
+                'description': f"Еженедельное обновление хостинга ({day_names[day]}) в {time_input}",
+                'created_at': now.strftime("%Y-%m-%d %H:%M:%S")
+            }
+            USAGE_STATS["scheduled_updates"].append(task_info)
+            save_scheduled_tasks()
+            
+            await update.message.reply_text(
+                f"✅ Запланировано еженедельное обновление хостинга каждый {day_names[day].lower()} в {time_input}"
+            )
+            
+        except Exception as e:
+            logger.error(f"Ошибка при обработке времени: {str(e)}")
+            await update.message.reply_text(
+                "❌ Некорректный формат времени. Пожалуйста, укажите время в формате ЧЧ:ММ"
+            )
+            return SCHEDULE_TIME
+    
+    elif schedule_type == "schedule_custom":
+        # Обрабатываем разовое расписание
+        datetime_input = update.message.text.strip()
+        
+        # Проверяем формат даты и времени
+        try:
+            schedule_time = datetime.strptime(datetime_input, "%Y-%m-%d %H:%M")
+            
+            # Если время уже прошло
+            if schedule_time <= datetime.now():
+                await update.message.reply_text(
+                    "❌ Указанное время уже прошло. Пожалуйста, укажите будущую дату и время."
+                )
+                return SCHEDULE_TIME
+            
+            # Сохраняем время
+            context.user_data['schedule_datetime'] = datetime_input
+            
+            # Создаем задачу
+            success = await schedule_task(
+                context=context,
+                chat_id=update.effective_chat.id,
+                task_time=datetime_input,
+                task_function=scheduled_pull_task,
+                description="Разовое обновление хостинга из репозитория"
+            )
+            
+            if success:
+                await update.message.reply_text(f"✅ Запланировано разовое обновление хостинга на {datetime_input}")
+            else:
+                await update.message.reply_text("❌ Ошибка при планировании обновления.")
+            
+        except ValueError:
+            await update.message.reply_text(
+                "❌ Некорректный формат даты и времени.\n\n"
+                "Пожалуйста, укажите дату и время в формате ГГГГ-ММ-ДД ЧЧ:ММ\n"
+                "Например: 2025-05-01 12:00"
+            )
+            return SCHEDULE_TIME
+    
+    else:
+        await update.message.reply_text("❌ Неизвестный тип расписания. Планирование отменено.")
+        
+    context.user_data.pop('conversation_active', None)
+    return ConversationHandler.END
+
 def main() -> None:
     """Запуск бота"""
     try:
@@ -1796,12 +2048,14 @@ def main() -> None:
         application.add_handler(CommandHandler("cancel", cancel))
         application.add_handler(CommandHandler("status", status_command))
         application.add_handler(CommandHandler("pull", pull_command))
-        application.add_handler(CommandHandler("push_hosting", push_hosting_command))
+        application.add_handler(CommandHandler("push_hosting", update_hosting_command))
         application.add_handler(CommandHandler("rollback", rollback_command))
-        application.add_handler(CommandHandler("logs", logs_command))
+        application.add_handler(CommandHandler("logs", send_logs))
         application.add_handler(CommandHandler("subscribers", subscribers_command))
         application.add_handler(CommandHandler("subscribe", subscribe_command))
         application.add_handler(CommandHandler("unsubscribe", unsubscribe_command))
+        application.add_handler(CommandHandler("test_ssh", test_ssh_command))
+        application.add_handler(CommandHandler("restart_server", restart_server_command))
         
         # Добавляем ConversationHandler для команды /reboot
         reboot_conv_handler = ConversationHandler(
@@ -1815,11 +2069,13 @@ def main() -> None:
         
         # Добавляем ConversationHandler для команды /schedule
         schedule_conv_handler = ConversationHandler(
-            entry_points=[CommandHandler("schedule", schedule_command)],
+            entry_points=[CommandHandler("schedule", schedule_update_command)],
             states={
                 SCHEDULE_TIME: [
-                    MessageHandler(filters.TEXT & ~filters.COMMAND, set_schedule_time),
-                    CallbackQueryHandler(confirm_schedule, pattern="^confirm_schedule$|^cancel_schedule$")
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, process_schedule_time),
+                    CallbackQueryHandler(handle_schedule_selection, 
+                                         pattern="^schedule_daily$|^schedule_weekly$|^schedule_custom$|^cancel_schedule$"),
+                    CallbackQueryHandler(handle_weekly_day_selection, pattern="^day_\d$")
                 ]
             },
             fallbacks=[CommandHandler("cancel", cancel)]

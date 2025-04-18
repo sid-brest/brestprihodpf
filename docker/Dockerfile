@@ -33,6 +33,9 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get update && apt-get install -y \
     git \
     wget \
+    ssh \
+    sshpass \
+    rsync \
     && rm -rf /var/lib/apt/lists/*
 
 # Установка Tesseract OCR
@@ -43,6 +46,11 @@ RUN apt-get update && apt-get install -y \
 
 # Настройка временной зоны
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Настройка SSH
+RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh
+RUN echo "StrictHostKeyChecking no" > /etc/ssh/ssh_config.d/no_strict_host_checking.conf && \
+    echo "UserKnownHostsFile /dev/null" >> /etc/ssh/ssh_config.d/no_strict_host_checking.conf
 
 # Настройка переменных окружения
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -56,14 +64,31 @@ COPY bot/requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
     && pip install --no-cache-dir -r requirements.txt
 
+# Создание директорий для данных, логов и SSH
+RUN mkdir -p /app/data /app/logs /app/ssh
+
 # Создание пользователя без прав root для повышения безопасности
 RUN groupadd -r botuser && useradd -r -g botuser -m -d /home/botuser botuser \
-    && mkdir -p /tmp/images /tmp/text /app/logs \
-    && chown -R botuser:botuser /tmp/images /tmp/text /app/logs
+    && mkdir -p /tmp/images /tmp/text \
+    && chown -R botuser:botuser /tmp/images /tmp/text /app/logs /app/data
 
 # Копирование скриптов бота
 COPY bot/ .
-RUN chown -R botuser:botuser /app
+
+# Даем права на доступ к SSH директории и SSH команде
+RUN chmod 700 /app/ssh \
+    && chmod 600 /app/ssh/* 2>/dev/null || true \
+    && chown -R botuser:botuser /app
+
+# Скрипт для настройки SSH при запуске
+RUN echo '#!/bin/bash\n\
+if [ -f /app/ssh/id_rsa ]; then\n\
+  mkdir -p ~/.ssh\n\
+  cp -f /app/ssh/id_rsa ~/.ssh/\n\
+  chmod 600 ~/.ssh/id_rsa\n\
+fi\n\
+exec "$@"' > /app/entrypoint.sh && \
+    chmod +x /app/entrypoint.sh
 
 # Переключение на непривилегированного пользователя
 USER botuser
@@ -71,6 +96,6 @@ USER botuser
 # Проверка работоспособности Tesseract
 RUN tesseract --version || echo "Tesseract installed but command failed, continuing anyway"
 
-# Точка входа и команда запуска
-ENTRYPOINT ["python"]
-CMD ["bot.py"]
+# Новая точка входа и команда запуска
+ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["python", "bot.py"]
