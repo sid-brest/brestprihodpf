@@ -38,5 +38,7 @@ backups/
 
 # Ignore portainer
 docker/portainer-data/*
+
+# Other
 docker/update.sh
-docker/id_rsa
+docker/ssh/id_rsa
