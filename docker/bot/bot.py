@@ -2019,6 +2019,160 @@ async def process_schedule_time(update: Update, context: ContextTypes.DEFAULT_TY
     context.user_data.pop('conversation_active', None)
     return ConversationHandler.END
 
+# Добавим функцию для отправки логов
+async def send_logs(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Отправляет файлы логов администратору"""
+    user_id = update.effective_user.id
+    
+    if str(user_id) != ADMIN_USER_ID:
+        return
+    
+    try:
+        log_files = ["bot.log", "img_text_converter.log"]
+        existing_logs = [f for f in log_files if os.path.exists(f)]
+        
+        if not existing_logs:
+            await update.message.reply_text("❌ Файлы логов не найдены.")
+            return
+        
+        await update.message.reply_text("⏳ Подготавливаю файлы логов...")
+        
+        for log_file in existing_logs:
+            with open(log_file, "rb") as file:
+                await update.message.reply_document(
+                    document=file,
+                    filename=log_file,
+                    caption=f"📄 Лог-файл {log_file}"
+                )
+        
+        # Дополнительно можем отправить системную информацию
+        system_info = f"""📊 Системная информация:
+- ОС: {os.name}
+- Версия Python: {sys.version.split()[0]}
+- Время запуска бота: {BOT_START_TIME.strftime('%Y-%m-%d %H:%M:%S')}
+- Время работы: {get_uptime()}
+"""
+        await update.message.reply_text(system_info)
+    except Exception as e:
+        logger.error(f"Ошибка при отправке логов: {str(e)}")
+        await update.message.reply_text(f"❌ Ошибка при отправке логов: {str(e)}")
+
+# Обновим функцию для обновления хостинга через SSH
+async def update_hosting_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Обновляет файлы на хостинге из репозитория через SSH"""
+    user_id = update.effective_user.id
+    
+    if str(user_id) != ADMIN_USER_ID:
+        return
+    
+    message = await update.message.reply_text("⏳ Обновляю файлы на хостинге через SSH...")
+    
+    try:
+        success, result = await update_hosting()
+        
+        if success:
+            USAGE_STATS["last_repo_push"] = datetime.now().strftime("%d.%m.%Y %H:%M")
+            await message.edit_text(f"✅ Хостинг успешно обновлен!\n\n{result}")
+        else:
+            await message.edit_text(f"❌ Ошибка при обновлении хостинга:\n\n{result}")
+    except Exception as e:
+        logger.error(f"Ошибка при обновлении хостинга: {str(e)}")
+        await message.edit_text(f"❌ Ошибка при обновлении хостинга: {str(e)}")
+
+# Функция для тестирования SSH подключения
+async def test_ssh_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Тестирует SSH подключение к хостингу"""
+    user_id = update.effective_user.id
+    
+    if str(user_id) != ADMIN_USER_ID:
+        return
+    
+    message = await update.message.reply_text("⏳ Проверяю SSH подключение к хостингу...")
+    
+    try:
+        success, result = await test_ssh_connection()
+        
+        if success:
+            await message.edit_text(f"✅ SSH подключение работает!\n\n{result}")
+        else:
+            await message.edit_text(f"❌ Ошибка при проверке SSH подключения:\n\n{result}")
+    except Exception as e:
+        logger.error(f"Ошибка при проверке SSH подключения: {str(e)}")
+        await message.edit_text(f"❌ Ошибка при проверке SSH подключения: {str(e)}")
+
+# Добавим функцию для перезагрузки сервера
+async def restart_server_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Перезагружает сервер через sudo init 6"""
+    user_id = update.effective_user.id
+    
+    if str(user_id) != ADMIN_USER_ID:
+        return
+    
+    keyboard = InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton("✅ Да, перезагрузить", callback_data="confirm_server_reboot"),
+            InlineKeyboardButton("❌ Отмена", callback_data="cancel_server_reboot")
+        ]
+    ])
+    
+    await update.message.reply_text(
+        "⚠️ ВНИМАНИЕ! Вы собираетесь перезагрузить СЕРВЕР!\n\n"
+        "Это приведет к перезагрузке всей системы и временной недоступности сайта и бота.\n\n"
+        "Вы уверены, что хотите продолжить?",
+        reply_markup=keyboard
+    )
+
+# Обработчик подтверждения перезагрузки сервера
+async def confirm_server_reboot(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Подтверждение перезагрузки сервера"""
+    query = update.callback_query
+    await query.answer()
+    
+    if query.data == "confirm_server_reboot":
+        await query.edit_message_text("🔄 Выполняю перезагрузку сервера... Система будет недоступна некоторое время.")
+        
+        try:
+            # Создаем отдельный поток для перезагрузки, чтобы не блокировать основной поток
+            def delayed_reboot():
+                try:
+                    time.sleep(3)  # Даем время для отправки сообщения
+                    subprocess.run(["sudo", "init", "6"], check=True)
+                except Exception as e:
+                    logger.error(f"Ошибка при перезагрузке сервера: {str(e)}")
+            
+            threading.Thread(target=delayed_reboot).start()
+        except Exception as e:
+            logger.error(f"Ошибка при запуске перезагрузки сервера: {str(e)}")
+            await query.message.reply_text(f"❌ Ошибка при перезагрузке сервера: {str(e)}")
+    else:
+        await query.edit_message_text("❌ Перезагрузка сервера отменена.")
+
+# Обновленная функция для планирования обновлений
+async def schedule_update_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Планирует автоматическое обновление хостинга по расписанию"""
+    user_id = update.effective_user.id
+    
+    if str(user_id) != ADMIN_USER_ID:
+        return ConversationHandler.END
+    
+    keyboard = [
+        [InlineKeyboardButton("🕙 Ежедневно", callback_data="schedule_daily")],
+        [InlineKeyboardButton("📅 Еженедельно", callback_data="schedule_weekly")],
+        [InlineKeyboardButton("📆 Указать дату и время", callback_data="schedule_custom")],
+        [InlineKeyboardButton("❌ Отмена", callback_data="cancel_schedule")]
+    ]
+    
+    await update.message.reply_text(
+        "⏰ Планирование автоматического обновления хостинга\n\n"
+        "Выберите периодичность обновления:",
+        reply_markup=InlineKeyboardMarkup(keyboard)
+    )
+    
+    context.user_data['conversation_active'] = True
+    return SCHEDULE_TIME
+
+
+
 def main() -> None:
     """Запуск бота"""
     try:
