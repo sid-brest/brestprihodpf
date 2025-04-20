@@ -41,4 +41,4 @@ docker/portainer-data/*
 
 # Other
 docker/update.sh
-docker/ssh/id_rsa
+docker/ssh/*
