@@ -263,9 +263,17 @@ async def reboot_container():
 async def pull_from_github():
     """Загрузить файл index.html из репозитория GitHub"""
     try:
-        # Удаляем локальный репозиторий, если он существует
-        if os.path.exists(REPO_PATH):
-            shutil.rmtree(REPO_PATH)
+        # Создаем рабочую директорию во временной папке
+        if not os.path.exists(REPO_PATH):
+            os.makedirs(REPO_PATH, exist_ok=True)
+        else:
+            # Очищаем директорию, но не удаляем ее полностью
+            for item in os.listdir(REPO_PATH):
+                item_path = os.path.join(REPO_PATH, item)
+                if os.path.isfile(item_path):
+                    os.unlink(item_path)
+                elif os.path.isdir(item_path):
+                    shutil.rmtree(item_path)
             
         # Клонируем репозиторий
         repo_url_with_token = REPO_URL.replace('https://', f'https://{GIT_TOKEN}@')
@@ -278,6 +286,19 @@ async def pull_from_github():
         
         # Копируем файл из репозитория в рабочую директорию
         if os.path.exists(index_path):
+            # Создаем резервную копию перед обновлением
+            backup_dir = "/app/backups"
+            os.makedirs(backup_dir, exist_ok=True)
+            
+            current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+            backup_file = os.path.join(backup_dir, f"index.html.backup_before_pull_{current_time}")
+            
+            # Копируем текущий файл в бэкап, если он существует
+            if os.path.exists(INDEX_HTML_PATH):
+                shutil.copy2(INDEX_HTML_PATH, backup_file)
+                logger.info(f"Создана резервная копия текущего index.html: {backup_file}")
+            
+            # Копируем новый файл из репозитория
             shutil.copy2(index_path, INDEX_HTML_PATH)
             logger.info(f"Файл index.html успешно загружен из репозитория")
             return True, "Файл index.html успешно загружен из репозитория"
@@ -287,7 +308,7 @@ async def pull_from_github():
     except Exception as e:
         logger.error(f"Ошибка при загрузке файла из репозитория: {str(e)}")
         return False, str(e)
-
+ 
 # Функция для обновления хостинга из репозитория
 async def pull_from_github_to_hosting(context=None):
     """Обновить файлы на хостинге из репозитория GitHub"""

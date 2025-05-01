@@ -228,7 +228,6 @@ def create_schedule_html(text):
         logger.error(f"Ошибка при создании HTML-структуры: {str(e)}\n{traceback.format_exc()}")
         return ""
 
-
 def update_index_html(index_path, schedule_html):
     """
     Обновляет файл index.html с новым расписанием.
@@ -254,8 +253,8 @@ def update_index_html(index_path, schedule_html):
             logger.error("Получен пустой HTML для обновления")
             return False
             
-        # Создаем резервную копию
-        backup_dir = os.path.join(os.path.dirname(index_path), "backups")
+        # Создаем резервную копию в директории /app/backups вместо подкаталога в директории проекта
+        backup_dir = "/app/backups"
         Path(backup_dir).mkdir(exist_ok=True)
 
         # Удаляем старые резервные копии, если их больше 10
@@ -299,9 +298,14 @@ def update_index_html(index_path, schedule_html):
             logger.info("Содержимое файла не изменилось")
             return True
 
-        # Записываем обновленное содержимое
-        with open(index_path, "w", encoding="utf-8") as file:
+        # Создаем временный файл для новой версии index.html
+        temp_path = os.path.join("/app/data", "new_index.html")
+        with open(temp_path, "w", encoding="utf-8") as file:
             file.write(new_content)
+        
+        # Копируем временный файл на место оригинального
+        shutil.copy2(temp_path, index_path)
+        os.remove(temp_path)
 
         logger.info(f"Файл index.html успешно обновлен: {index_path}")
         return True
@@ -318,7 +322,6 @@ def update_index_html(index_path, schedule_html):
                 logger.error(f"Ошибка при восстановлении из резервной копии: {str(restore_error)}")
                 
         return False
-
 
 def recognize_text_from_image(image_path, lang="rus"):
     """

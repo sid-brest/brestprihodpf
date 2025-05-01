@@ -11,9 +11,10 @@ services:
     env_file:
       - .env
     volumes:
-      - ..:/app/project:ro
+      - ..:/app/project:ro  # Keep this read-only for safety
       - ./logs:/app/logs
       - ./data:/app/data
+      - ./backups:/app/backups  # Added dedicated backups volume
       - ./ssh:/app/ssh:ro
       - church_temp:/tmp
     healthcheck:
