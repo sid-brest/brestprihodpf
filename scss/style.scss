@@ -39,6 +39,7 @@ a {
 	transition: .3s all;
 	color: $brand-primary;
 	&:hover, &:focus, &:active {
+		outline: none;
 		color: darken($brand-primary, 5%);
 		text-decoration: none;
 	}
@@ -85,6 +86,7 @@ a {
 	.navbar-toggle:focus,
 	.navbar-toggle:hover {
 		background-color: transparent;
+		outline: none;
 	}
 	.navbar-toggle {
     border: none;
@@ -305,36 +307,39 @@ a {
 				&:hover {
 					color: rgba(255,255,255,.7);
 				}
-				&:hover, &:focus, &:active {
-					color: rgba(255,255,255,.7);
-					@media screen and (max-width: $screen-sm) {
-						// border-top: 2px solid transparent;
-						color: rgba(0,0,0,.7);
-					}
-				}
-			}
-			&.open {
-				> a {
+			&:hover, &:focus, &:active {
+				outline: none;
+				color: rgba(255,255,255,.7);
+				@media screen and (max-width: $screen-sm) {
 					// border-top: 2px solid transparent;
-					&:hover, &:focus, & {
-						background: none;
-					}
+					color: rgba(0,0,0,.7);
 				}
 			}
-			&.active {
-				> a {
+		}
+		&.open {
+			> a {
+				// border-top: 2px solid transparent;
+				&:hover, &:focus, & {
 					background: none;
+					outline: none;
+				}
+			}
+		}
+		&.active {
+			> a {
+				background: none;
+				color: $brand-white;
+				@media screen and (max-width: $screen-sm) {
+					color: rgba(0,0,0,.7);
+				}
+				&:active, &:focus, &:hover {
+					background: none;
+					outline: none;
 					color: $brand-white;
 					@media screen and (max-width: $screen-sm) {
 						color: rgba(0,0,0,.7);
 					}
-					&:active, &:focus, &:hover {
-						background: none;
-						color: $brand-white;
-						@media screen and (max-width: $screen-sm) {
-							color: rgba(0,0,0,.7);
-						}
-					}
+				}
 				}
 			}
 			> .dropdown-menu {

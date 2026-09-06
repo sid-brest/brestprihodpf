@@ -56,6 +56,7 @@ a {
 }
 
 a:hover, a:focus, a:active {
+  outline: none;
   color: #ff9725;
   text-decoration: none;
 }
@@ -113,6 +114,7 @@ a:hover, a:focus, a:active {
 .probootstrap-navbar .navbar-toggle:focus,
 .probootstrap-navbar .navbar-toggle:hover {
   background-color: transparent;
+  outline: none;
 }
 
 .probootstrap-navbar .navbar-toggle {
@@ -349,6 +351,7 @@ a:hover, a:focus, a:active {
 }
 
 .probootstrap-navbar .navbar-nav > li > a:hover, .probootstrap-navbar .navbar-nav > li > a:focus, .probootstrap-navbar .navbar-nav > li > a:active {
+  outline: none;
   color: rgba(255, 255, 255, 0.7);
 }
 
@@ -360,6 +363,7 @@ a:hover, a:focus, a:active {
 
 .probootstrap-navbar .navbar-nav > li.open > a:hover, .probootstrap-navbar .navbar-nav > li.open > a:focus, .probootstrap-navbar .navbar-nav > li.open > a {
   background: none;
+  outline: none;
 }
 
 .probootstrap-navbar .navbar-nav > li.active > a {
@@ -375,6 +379,7 @@ a:hover, a:focus, a:active {
 
 .probootstrap-navbar .navbar-nav > li.active > a:active, .probootstrap-navbar .navbar-nav > li.active > a:focus, .probootstrap-navbar .navbar-nav > li.active > a:hover {
   background: none;
+  outline: none;
   color: #ffffff;
 }
 
