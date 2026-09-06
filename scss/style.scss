@@ -1706,7 +1706,7 @@ section[data-section="menu"] {
   		@extend .slider-height;
   		background-size: cover;
   		// background-position: center center;
-  		background-repeat: none;
+  		background-repeat: no-repeat;
   		&.overlay {
 				&:before {
 					content: "";

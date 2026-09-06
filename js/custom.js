@@ -207,7 +207,7 @@
             }
 
             linkEl = figureEl.children[0]; // <a> element
-            console.log(figureEl);
+            
             size = linkEl.getAttribute('data-size').split('x');
 
             // create slide object
