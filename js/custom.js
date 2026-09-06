@@ -423,22 +423,23 @@
 	// Page Nav
 	var clickMenu = function() {
 
-		jQuery('.navbar-nav a:not([class="external"])').click(function(event){
+	jQuery('.navbar-nav a:not([class="external"])').click(function(event){
 
-			var section = jQuery(this).data('nav-section'),
-				navbar = jQuery('.navbar-nav');
-				if (isMobile.any()) {
-					jQuery('.navbar-toggle').click();
-				}
-				if ( jQuery('[data-section="' + section + '"]').length ) {
-			    	jQuery('html, body').animate({
-			        	scrollTop: jQuery('[data-section="' + section + '"]').offset().top - 55
-			    	}, 500, 'easeInOutExpo');
-			   }
+		var section = jQuery(this).data('nav-section'),
+			navbar = jQuery('.navbar-nav');
+			if (isMobile.any()) {
+				jQuery('.navbar-toggle').click();
+			}
+			navActive(section);
+			if ( jQuery('[data-section="' + section + '"]').length ) {
+		    	jQuery('html, body').animate({
+		        	scrollTop: jQuery('[data-section="' + section + '"]').offset().top - 55
+		    	}, 500, 'easeInOutExpo');
+		   }
 
-		    event.preventDefault();
-		    return false;
-		});
+	    event.preventDefault();
+	    return false;
+	});
 
 
 	};
