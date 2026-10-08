@@ -494,32 +494,33 @@
       </div>
 
       <!------------------------------ Insert Schedule ------------------------------>
-        <!-- <div class="row">
+        <div class="row">
           <div class="col-md-12 col-lg-12 col-sm-12 probootstrap-animate">
             <div class="form-group text-left">
               <hr />
               <img
-                src="img/ishanhsanfr.webp"
-                style="
-                  float: left;
-                  height: 120px;
-                  margin-right: 20px;
-                  align-items: center;
-                "
+                src="img/spiridon.webp"
+                class="rounded"
+                style="float: left; height: 120px; margin-right: 20px; margin-bottom: 10px;"
+              />
+              <img
+                src="img/gavriil.webp"
+                class="rounded"
+                style="float: left; height: 120px; margin-right: 20px; margin-bottom: 10px;"
               />
 
-              В приход храма святых благоверных князя Петра и княгини Февронии
-              Муромских в г. Бресте<br />Брестской епархии Белорусской
-              Православной Церкви (Белорусского Экзархата Московского
-              Патриархата)<br />с <b>14.12.2025</b> по <b>29.12.2025</b> будут
-              привезены мощи<br /><strong
-                >Святителя Иоанна Шанхайского и Сан-Францисского,
-                чудотворца</strong
-              ><br />Поклониться мощам можно с Пн. - Ср. 09:00-18:00, Чт. - Пт.
-              08:00-20:00, Вс. 08:00-19:00<br />
+              По благословению архиепископа Брестского и Кобринского Иоанна<br />
+              в приход храма святых благоверных князя Петра и княгини Февронии
+              Муромских в г. Бресте<br />с <b>14.10.2026 г.</b> по
+              <b>27.10.2026 г.</b> будут привезены мощи<br /><strong
+                >святителя Спиридона Тримифунтского и преподобного Гавриила
+                Самтаврийского</strong
+              ><br />Поклониться мощам можно Пн. - Ср. с 9.00-19.00 ч., Чт. -
+              Сб. с 8.00-20.00 ч. и Вс. с 8.00-19.00 ч.<br />
+              <div style="clear: both"></div>
             </div>
           </div>
-        </div> -->
+        </div>
 
         <!-- <div class="row">
           <div class="col-md-12 col-lg-12 col-sm-12 probootstrap-animate">
@@ -757,16 +758,16 @@
               <h3 class="secondary-heading text-center">данные</h3>
               <div class="text-start">
                 <p>
-                  Приход храма святых благоверных князя Петра и княгини Февронии
-                  Муромских в г. Бресте Брестской епархии Белорусской
-                  Православной Церкви (Белорусского Экзархата Московского
-                  Патриархата)
+                  Религиозная община приход храма святых благоверных князя Петра
+                  и княгини Февронии Муромских в г. Бресте Брестской епархии
+                  Белорусской Православной Церкви
                 </p>
                 <p>
                   Республика Беларусь, 224002, г. Брест, ул. Рокоссовского 1<br />
                   УНП 201018840<br /><br />
-                  р/с BY36MTBK3015000150001093300000401 РКЦ № 25 ЗАО "МТБанк" г.
-                  Брест, MTBKBY22
+                  р/с BY36MTBK30150001093300000401<br />
+                  ЗАО "МТБАНК", г. Минск<br />
+                  MTBKBY22
                 </p>
               </div>
             </div>
@@ -842,7 +843,7 @@
 
     <!------------------------------ Pop-up window  ------------------------------>
 
-    <!-- <div class="modal fade" id="extranews">
+    <div class="modal fade" id="extranews">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-body text-center">
@@ -853,17 +854,18 @@
             <br />По благословению архиепископа Брестского и Кобринского
             Иоанна<br />
             в приход храма святых благоверных князя Петра и княгини Февронии
-            Муромских<br />в г. Бресте с <b>14.12.2025 г.</b> по
-            <b>29.12.2025 г.</b> будут привезены<br />
+            Муромских<br />в г. Бресте с <b>14.10.2026 г.</b> по
+            <b>27.10.2026 г.</b> будут привезены<br />
             <p></p>
-            <img src="img\ishanhsanfr.webp" />
+            <img src="img/spiridon.webp" class="rounded" height="120" style="margin-right: 10px" />
+            <img src="img/gavriil.webp" class="rounded" height="120" />
             <h3>
-              мощи Святителя Иоанна Шанхайского<br />и Сан-Францисского,
-              чудотворца.
+              мощи святителя Спиридона Тримифунтского<br />и преподобного
+              Гавриила Самтаврийского.
             </h3>
             <br />Поклониться мощам можно<br />
-            Пн.- Ср. с 9:00-18:00 ч., Чт.- Пт. с 8:00-20:00 ч., Вс. с 8:00-19:00
-            ч.<br />
+            Пн. - Ср. с 9.00-19.00 ч., Чт. - Сб. с 8.00-20.00 ч. и Вс. с
+            8.00-19.00 ч.<br />
           </div>
         </div>
       </div>
@@ -872,7 +874,7 @@
     <script>
       // Check if the user has already seen the extranews today
       function hasSeenExtranewsToday() {
-        var lastSeen = localStorage.getItem("extranews_last_seen");
+        var lastSeen = localStorage.getItem("extranews_last_seen_102026");
         if (lastSeen) {
           var today = new Date().toDateString();
           return lastSeen === today;
@@ -883,7 +885,7 @@
       // Set the flag indicating the user has seen the extranews today
       function setExtranewsSeenToday() {
         var today = new Date().toDateString();
-        localStorage.setItem("extranews_last_seen", today);
+        localStorage.setItem("extranews_last_seen_102026", today);
       }
 
       $(document).ready(function () {
@@ -893,6 +895,6 @@
           setExtranewsSeenToday();
         }
       });
-    </script> -->
+    </script>
   </body>
 </html>

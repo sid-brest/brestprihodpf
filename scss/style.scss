@@ -1269,11 +1269,17 @@ section[data-section="menu"] {
 	visibility: hidden;
 }
 
+// rounded images
+.rounded {
+	border-radius: 10px;
+}
+
 // modal center
 .modal {
 	.modal-content {
-		box-shadow: none;	
-		border-radius: 0;
+		box-shadow: none;
+		border-radius: 10px;
+		overflow: hidden;
 		border: none;
 		position: relative;
 		box-shadow: 0px 0px 40px 0px rgba(0,0,0,.2);
@@ -1286,6 +1292,19 @@ section[data-section="menu"] {
 			@media screen and (max-width: $screen-xs) {
 				top: 20px;
 				right: 20px;
+			}
+		}
+	}
+	@media screen and (max-width: $screen-xs) {
+		.modal-dialog {
+			margin: 10px;
+		}
+		.modal-body {
+			padding: 15px;
+			img {
+				max-width: 45%;
+				height: auto;
+				border-radius: 10px;
 			}
 		}
 	}
