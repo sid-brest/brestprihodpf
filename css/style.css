@@ -1435,10 +1435,18 @@ section[data-section="menu"] {
   .modal .modal-body {
     padding: 15px;
   }
-  .modal .modal-body img {
-    max-width: 45%;
-    height: auto;
-    border-radius: 10px;
+}
+
+#extranews .news-img {
+  height: 100px;
+  width: auto;
+  margin: 0 5px 10px;
+  vertical-align: middle;
+}
+
+@media screen and (max-width: 480px) {
+  #extranews .news-img {
+    height: 60px;
   }
 }
 

@@ -1301,11 +1301,6 @@ section[data-section="menu"] {
 		}
 		.modal-body {
 			padding: 15px;
-			img {
-				max-width: 45%;
-				height: auto;
-				border-radius: 10px;
-			}
 		}
 	}
 	.probootstrap-modal-flex {
@@ -1421,6 +1416,17 @@ section[data-section="menu"] {
     /* To center horizontally */
     margin: 0 auto;
     pointer-events: all;
+	}
+}
+
+// pop-up news images
+#extranews .news-img {
+	height: 100px;
+	width: auto;
+	margin: 0 5px 10px;
+	vertical-align: middle;
+	@media screen and (max-width: $screen-xs) {
+		height: 60px;
 	}
 }
 
