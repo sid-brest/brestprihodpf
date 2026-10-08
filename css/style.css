@@ -1446,7 +1446,7 @@ section[data-section="menu"] {
 
 @media screen and (max-width: 480px) {
   #extranews .news-img {
-    height: 60px;
+    height: 120px;
   }
 }
 
