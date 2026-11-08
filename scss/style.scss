@@ -947,12 +947,6 @@ section[data-section="menu"] {
 			color: $brand-black;
 		}
 	}
-	.seperator {
-		display: block;
-		margin: 0 auto 10px auto;
-		color: #767676; // 4.54:1 on white
-		font-weight: 300;
-	}
 }
 .flexslider {
 	position: relative;
@@ -1514,6 +1508,93 @@ section[data-section="menu"] {
 	.probootstrap-cards .row > [class*="col-"],
 	.clergy-grid > [class*="col-"],
 	.contact-grid > [class*="col-"] {
+		flex: 0 0 100%;
+		max-width: 100%;
+	}
+}
+
+/* Headings that sit directly above content on white sections (about, contacts) */
+.probootstrap-bg-white .probootstrap-heading.dark {
+	margin-bottom: 44px;
+	@media screen and (max-width: $screen-sm) {
+		margin-bottom: 28px;
+	}
+}
+
+/* About the parish */
+.about-grid {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+}
+.about-text {
+	padding-right: 10px;
+	p:last-child {
+		margin-bottom: 0;
+	}
+}
+.about-photo {
+	margin: 0 auto;
+	max-width: 380px;
+	img {
+		width: 100%;
+		height: auto;
+		border-radius: 8px;
+		border: 1px solid rgba(0,0,0,.08);
+		box-shadow: 0 2px 12px rgba(0,0,0,.05);
+	}
+	figcaption {
+		margin-top: 10px;
+		font-size: 13px;
+		text-align: center;
+	}
+	@media screen and (max-width: $screen-sm) {
+		margin-top: 30px;
+	}
+}
+.about-subheading {
+	margin: 50px 0 24px;
+	text-align: center;
+	font-size: 14px;
+	font-weight: 700;
+	letter-spacing: .15em;
+	text-transform: uppercase;
+	color: $brand-link;
+	@media screen and (max-width: $screen-sm) {
+		margin-top: 36px;
+	}
+}
+.about-shrines {
+	display: flex;
+	flex-wrap: wrap;
+	> [class*="col-"] {
+		display: flex;
+		margin-bottom: 30px;
+	}
+}
+.shrine-card {
+	flex: 1;
+	background: #fbf8f3;
+	border: 1px solid rgba($brand-primary, .4);
+	border-radius: 8px;
+	padding: 20px 22px;
+	.date {
+		display: block;
+		margin-bottom: 8px;
+		font-size: 12px;
+		font-weight: 700;
+		letter-spacing: .15em;
+		text-transform: uppercase;
+		color: $brand-link;
+	}
+	p {
+		margin: 0;
+		font-size: 14px;
+		line-height: 1.6;
+	}
+}
+@media screen and (max-width: $screen-sm - 1) {
+	.about-shrines > [class*="col-"] {
 		flex: 0 0 100%;
 		max-width: 100%;
 	}

@@ -163,16 +163,19 @@
 
     <!-- About -->
 
-    <section class="probootstrap-section probootstrap-bg-white">
+    <section class="probootstrap-section probootstrap-bg-white" id="about">
       <div class="container">
         <div class="row">
-          <div class="col-md-6 probootstrap-animate">
-            <div class="probootstrap-heading dark text-center">
+          <div class="col-md-12 text-center probootstrap-animate">
+            <div class="probootstrap-heading dark">
               <h2 class="primary-heading">Сведения</h2>
               <p class="secondary-heading">о приходе</p>
-              <span class="seperator">* * *</span>
             </div>
-            <div class="text-left">
+          </div>
+        </div>
+        <div class="row about-grid">
+          <div class="col-md-7 probootstrap-animate">
+            <div class="about-text">
               <p>
                 Приход храма святых благоверных князя Петра и княгини Февронии
                 Муромских в г. Бресте Брестской епархии Белорусской Православной
@@ -187,97 +190,53 @@
                 храме с мая 2013 года в приходе было начато строительство
                 первого малого храма в честь Иверской иконы Божией Матери.
                 Строительство храма длилось 3,5 года и завершилось его
-                освящением архиепископом Брестским и Кобринским Иоанном 07
-                декабря 2017 года.
+                освящением архиепископом Брестским и Кобринским Иоанном
+                7 декабря 2017 года.
               </p>
-            </div>
-
-            <!-- Button trigger modal -->
-
-            <div class="text-center">
               <p>
-                <button
-                  type="button"
-                  class="btn btn-primary btn-lg"
-                  data-toggle="modal"
-                  data-target="#historyModalCenter"
-                >
-                  Подробнее
-                </button>
+                В настоящее время ведётся вторая очередь строительства:
+                возведение воскресной школы. Третья очередь предполагает
+                строительство основного храма в честь благоверных князя Петра и
+                княгини Февронии Муромских, покровителей семьи, любви и
+                верности.
               </p>
             </div>
           </div>
-          <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0 col-md-push-1 probootstrap-animate text-center">
-            <div class="probootstrap-block-image">
-              <figure>
-                <img src="img/img_1.webp" class="rounded" alt="Храм в честь Иверской иконы Божией Матери в Бресте" width="907" height="1212" loading="lazy" decoding="async" />
-              </figure>
-            </div>
+          <div class="col-md-5 probootstrap-animate">
+            <figure class="about-photo">
+              <img src="img/img_1.webp" alt="Икона святых благоверных князя Петра и княгини Февронии Муромских" width="907" height="1212" loading="lazy" decoding="async" />
+              <figcaption>Святые благоверные князь Пётр и княгиня Феврония Муромские</figcaption>
+            </figure>
           </div>
         </div>
-
-        <!-- Modal -->
-
-        <div
-          class="modal fade"
-          id="historyModalCenter"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="historyModalCenterTitle"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h3 class="modal-title" id="historyModalCenterTitle">
-                  Сведения о приходе
-                </h3>
-                <button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                В настоящее время ведётся вторая очередь строительства –
-                возведение воскресной школы.<br />
-                <br />Третья очередь предполагает строительство основного храма
-                в честь благоверных князя Петра и княгини Февронии Муромских –
-                покровителей семьи, любви и верности.<br />
-                <br />За время существования прихода в нем произошли важные
-                события:
-                <ul>
-                  <li>
-                    08 июля 2014 года в приход для постоянного нахождения был
-                    привезен ковчег с частицами мощей благоверных князя Петра и
-                    княгини Февронии Муромских чудотворцев из Свято-Троицкого
-                    женского монастыря г. Мурома;
-                  </li>
-                  <li>
-                    08 июля 2016 года в строящийся храм в честь Иверской иконы
-                    Божией Матери со Святой Горы Афон был доставлен список
-                    Иверской иконы Божией Матери для постоянного пребывания;
-                  </li>
-                  <li>
-                    в мае 2018 года для храма в честь Иверской иконы Божией
-                    Матери со Святой Горы Афон были привезены иконы: Божией
-                    Матери «Всецарица», святителя Николая чудотворца,
-                    великомученика и целителя Пантелеимона
-                  </li>
-                </ul>
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-default"
-                  data-dismiss="modal"
-                >
-                  Закрыть
-                </button>
-              </div>
+        <h3 class="about-subheading">Святыни прихода</h3>
+        <div class="row about-shrines">
+          <div class="col-sm-4 probootstrap-animate">
+            <div class="shrine-card">
+              <span class="date">8 июля 2014</span>
+              <p>
+                Ковчег с частицами мощей благоверных князя Петра и княгини
+                Февронии Муромских чудотворцев из Свято-Троицкого женского
+                монастыря г. Мурома, привезён для постоянного пребывания.
+              </p>
+            </div>
+          </div>
+          <div class="col-sm-4 probootstrap-animate">
+            <div class="shrine-card">
+              <span class="date">8 июля 2016</span>
+              <p>
+                Список Иверской иконы Божией Матери со Святой Горы Афон,
+                доставлен в строящийся храм для постоянного пребывания.
+              </p>
+            </div>
+          </div>
+          <div class="col-sm-4 probootstrap-animate">
+            <div class="shrine-card">
+              <span class="date">май 2018</span>
+              <p>
+                Иконы со Святой Горы Афон: Божией Матери «Всецарица», святителя
+                Николая чудотворца, великомученика и целителя Пантелеимона.
+              </p>
             </div>
           </div>
         </div>
