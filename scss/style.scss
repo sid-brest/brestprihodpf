@@ -568,6 +568,16 @@ section[data-section="menu"] {
 	padding: 7em 0;
 	position: relative;
 	height: 600px;
+	// section headings over photos: same gold + shadow as the slider
+	.probootstrap-heading {
+		.primary-heading {
+			color: $heading-on-photo;
+			text-shadow: $shadow-on-photo;
+		}
+		.secondary-heading {
+			text-shadow: 0 2px 10px rgba(0,0,0,.45);
+		}
+	}
 	@media screen and (max-width: $screen-sm) {
 		padding: 3em 0;
 		height: 300px;
@@ -995,8 +1005,8 @@ section[data-section="menu"] {
 
   	// On photos the dark orange is unreadable: light gold + soft shadow instead
   	.primary-heading {
-  		color: #FFD98A;
-  		text-shadow: 0 2px 12px rgba(0,0,0,.55), 0 0 2px rgba(0,0,0,.4);
+  		color: $heading-on-photo;
+  		text-shadow: $shadow-on-photo;
   	}
   	.secondary-heading {
   		text-shadow: 0 2px 10px rgba(0,0,0,.45);
