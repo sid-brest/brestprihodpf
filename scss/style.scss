@@ -4,7 +4,7 @@ html {
 	overflow-x: hidden;
 }
 body {
-	background: #E4E4E4;
+	background: #f4f2ee; // warm light grey behind the card sections
 	color: $text-color;
 	line-height: 24px;
 	font-size: 15px;
@@ -654,6 +654,8 @@ section[data-section="menu"] {
 .probootstrap-block-image {
 	background: $brand-white;
 	margin-bottom: 30px;
+	border-radius: 8px;
+	border: 1px solid rgba(0,0,0,.06);
 	figure {
 		img {
 			max-width: 100%;
@@ -664,14 +666,17 @@ section[data-section="menu"] {
 		padding: 20px;
 		.date {
 			display: block;
-			color: darken(#ccc, 20%);
+			margin-bottom: 6px;
+			color: $brand-link;
 			font-size: 12px;
-			letter-spacing: .2em;
+			font-weight: 700;
+			letter-spacing: .15em;
 			text-transform: uppercase;
 		}
 		h3 {
-			margin: 0 0 10px 0;
-			font-size: 20px;
+			margin: 0;
+			font-size: 18px;
+			line-height: 1.35;
 			a {
 				color: $brand-black;
 				&:hover {
@@ -694,71 +699,30 @@ section[data-section="menu"] {
 		display: flex;
 	}
 	.probootstrap-block-image {
-		border-radius: 10px;
-		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
 		overflow: hidden;
 		display: flex;
 		flex-direction: column;
+		width: 100%;
+		// same photo proportions in every card; faces sit in the upper part of group photos
 		figure {
-			flex: 1;
-			display: flex;
+			flex: 0 0 auto;
+			margin: 0;
+			aspect-ratio: 4 / 3;
+			overflow: hidden;
 			img {
 				width: 100%;
+				height: 100%;
 				object-fit: cover;
-			}
-		}
-	}
-}
-
-// menus
-.menus {
-	padding: 0;
-	margin: 0;
-	li {
-		padding: 0;
-		margin: 0 0 10px 0;
-		list-style: none;
-		display: block;
-		position: relative;
-		.image, .text {
-			display: table-cell;
-			vertical-align: top;
-		}
-		.image {
-			width: 80px;
-
-			img {
-				max-width: 100%;
-				border-radius: 50%;
+				object-position: 50% 30%;
 			}
 		}
 		.text {
-			padding-left: 20px;
-			h3 {
-				margin: 15px 0 0px 0;
-				font-size: 18px;
-				text-transform: uppercase;
-				color: $brand-black;
-				@media screen and (max-width: $screen-sm) {
-					margin-top: 0px;
-				}
-			}
-			.price {
-				position: absolute;
-				top: 15px;
-				right: 0;
-				font-size: 20px;
-				color: $brand-link;
-				@media screen and (max-width: $screen-sm) {
-					top: 0px;
-					position: relative;
-					display: block;
-					margin-bottom: 0px;
-				}
-			}
+			flex: 1;
 		}
 	}
 }
+
 
 // animate
 .probootstrap-animate {
@@ -1416,5 +1380,157 @@ section[data-section="menu"] {
 			margin-top: 10px;
 			border-top: 1px solid rgba(0,0,0,.08);
 		}
+	}
+}
+
+/* Clergy cards */
+.clergy-grid {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	> [class*="col-"] {
+		display: flex;
+		margin-bottom: 30px;
+	}
+}
+.clergy-card {
+	flex: 1;
+	text-align: center;
+	background: $brand-white;
+	border: 1px solid rgba(0,0,0,.08);
+	border-radius: 8px;
+	padding: 32px 20px 28px;
+	box-shadow: 0 2px 12px rgba(0,0,0,.04);
+}
+.clergy-monogram {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 76px;
+	height: 76px;
+	margin-bottom: 18px;
+	border-radius: 50%;
+	background: #fbf8f3;
+	border: 2px solid rgba($brand-primary, .6);
+	color: $brand-primary-text;
+	font-family: $font-secondary;
+	font-size: 34px;
+	line-height: 1;
+	padding-top: 4px;
+}
+.clergy-name {
+	margin: 0 0 8px;
+	font-size: 18px;
+	line-height: 1.3;
+	color: $brand-black;
+}
+.clergy-role {
+	margin: 0;
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: .15em;
+	text-transform: uppercase;
+	color: $brand-link;
+}
+
+/* Contacts */
+.contact-grid {
+	display: flex;
+	flex-wrap: wrap;
+	> [class*="col-"] {
+		display: flex;
+		margin-bottom: 30px;
+	}
+}
+.contact-card {
+	flex: 1;
+	background: #fbf8f3;
+	border: 1px solid rgba($brand-primary, .4);
+	border-radius: 8px;
+	padding: 28px 30px;
+	@media screen and (max-width: $screen-xs) {
+		padding: 22px 18px;
+	}
+}
+.contact-lead {
+	margin: 0 0 20px;
+}
+.contact-list {
+	margin: 0 0 24px;
+	> div {
+		display: flex;
+		padding: 9px 0;
+		border-top: 1px solid rgba(0,0,0,.06);
+		&:first-child {
+			padding-top: 0;
+			border-top: 0;
+		}
+		@media screen and (max-width: $screen-xs) {
+			flex-direction: column;
+		}
+	}
+	dt {
+		flex: 0 0 140px;
+		padding-top: 3px;
+		font-size: 12px;
+		font-weight: 700;
+		letter-spacing: .1em;
+		text-transform: uppercase;
+		color: $brand-link;
+		@media screen and (max-width: $screen-xs) {
+			flex: none;
+			margin-bottom: 2px;
+		}
+	}
+	dd {
+		margin: 0;
+		color: $brand-black;
+		word-break: break-word;
+		a {
+			color: $brand-black;
+			border-bottom: 1px solid rgba($brand-primary, .6);
+			&:hover {
+				color: $brand-link;
+			}
+		}
+	}
+}
+.contact-actions {
+	margin: 0;
+	.btn {
+		margin: 0 10px 10px 0;
+	}
+}
+.contact-map {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	a {
+		flex: 1;
+		display: block;
+	}
+	img {
+		width: 100%;
+		height: 100%;
+		min-height: 350px;
+		object-fit: cover;
+		border-radius: 8px;
+		border: 1px solid rgba(0,0,0,.08);
+	}
+	figcaption {
+		margin-top: 10px;
+		font-size: 13px;
+		text-align: center;
+	}
+}
+
+/* Flex grids: below the sm breakpoint Bootstrap columns have no width, so force full-width rows */
+@media screen and (max-width: $screen-sm - 1) {
+	.probootstrap-cards .row > [class*="col-"],
+	.clergy-grid > [class*="col-"],
+	.contact-grid > [class*="col-"] {
+		flex: 0 0 100%;
+		max-width: 100%;
 	}
 }

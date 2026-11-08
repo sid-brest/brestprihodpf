@@ -315,10 +315,9 @@
               <figure>
                 <img src="img/img_square_2.webp" alt="Закладка храма в честь Иверской иконы Божией Матери, 2013 год" width="700" height="700" loading="lazy" decoding="async" />
               </figure>
-              <div class="text-center">
-                <br class="price" />Заклад храма в честь Иверской иконы Божией
-                Матери<br />
-                <h3>2013</h3>
+              <div class="text">
+                <span class="date">2013</span>
+                <h3>Заклад храма в честь Иверской иконы Божией Матери</h3>
               </div>
             </div>
           </div>
@@ -328,9 +327,9 @@
               <figure>
                 <img src="img/img_square_1.webp" alt="Богослужение во временном храме-палатке, 2013–2016 годы" width="700" height="700" loading="lazy" decoding="async" />
               </figure>
-              <div class="text-center">
-                <br class="price" />Службы в палатке<br />
-                <h3>2013-2016</h3>
+              <div class="text">
+                <span class="date">2013-2016</span>
+                <h3>Службы в палатке</h3>
               </div>
             </div>
           </div>
@@ -340,9 +339,9 @@
               <figure>
                 <img src="img/img_square_4.webp" alt="Прихожане у временного храма-палатки" width="700" height="700" loading="lazy" decoding="async" />
               </figure>
-              <div class="text-center">
-                <br class="price" />Службы в палатке<br />
-                <h3>2013-2016</h3>
+              <div class="text">
+                <span class="date">2013-2016</span>
+                <h3>Службы в палатке</h3>
               </div>
             </div>
           </div>
@@ -354,9 +353,9 @@
               <figure>
                 <img src="img/img_square_5.webp" alt="Именные блоки для строительства храма, 2014 год" width="700" height="700" loading="lazy" decoding="async" />
               </figure>
-              <div class="text-center">
-                <br class="price" />Именные блоки<br />
-                <h3>2014</h3>
+              <div class="text">
+                <span class="date">2014</span>
+                <h3>Именные блоки</h3>
               </div>
             </div>
           </div>
@@ -366,10 +365,9 @@
               <figure>
                 <img src="img/img_square_6.webp" alt="Строительство храма в честь Иверской иконы Божией Матери, 2015 год" width="700" height="700" loading="lazy" decoding="async" />
               </figure>
-              <div class="text-center">
-                <br class="price" />Строительство храма в честь Иверской иконы
-                Божией Матери<br />
-                <h3>2015</h3>
+              <div class="text">
+                <span class="date">2015</span>
+                <h3>Строительство храма в честь Иверской иконы Божией Матери</h3>
               </div>
             </div>
           </div>
@@ -379,10 +377,9 @@
               <figure>
                 <img src="img/img_square_3.webp" alt="Строительство храма в честь Иверской иконы Божией Матери, 2016 год" width="700" height="700" loading="lazy" decoding="async" />
               </figure>
-              <div class="text-center">
-                <br class="price" />Строительство храма в честь Иверской иконы
-                Божией Матери<br />
-                <h3>2016</h3>
+              <div class="text">
+                <span class="date">2016</span>
+                <h3>Строительство храма в честь Иверской иконы Божией Матери</h3>
               </div>
             </div>
           </div>
@@ -413,31 +410,27 @@
 
     <section class="probootstrap-section probootstrap-bg-white">
       <div class="container">
-        <div class="row">
-          <div class="col-md-6">
-            <ul class="menus">
-              <li>
-                <!-- <figure class="image"><img src="img/img_square_5.webp"></figure> -->
-                <div class="text">
-                  <h3>Дионисий Петрович Грибанов</h3>
-                  <p>Настоятель / иерей</p>
-                </div>
-              </li>
-              <li>
-                <!-- <figure class="image"><img src="img/img_square_5.webp"></figure> -->
-                <div class="text">
-                  <h3>Виталий Владимирович Кивачук</h3>
-                  <p>Клир / иерей</p>
-                </div>
-              </li>
-              <li>
-                <!-- <figure class="image"><img src="img/img_square_5.webp"></figure> -->
-                <div class="text">
-                  <h3>Александр Александрович Бычик</h3>
-                  <p>Клир / иерей</p>
-                </div>
-              </li>
-            </ul>
+        <div class="row clergy-grid">
+          <div class="col-md-4 col-sm-4">
+            <div class="clergy-card">
+              <span class="clergy-monogram" aria-hidden="true">ДГ</span>
+              <h3 class="clergy-name">Дионисий Петрович Грибанов</h3>
+              <p class="clergy-role">Настоятель · иерей</p>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-4">
+            <div class="clergy-card">
+              <span class="clergy-monogram" aria-hidden="true">ВК</span>
+              <h3 class="clergy-name">Виталий Владимирович Кивачук</h3>
+              <p class="clergy-role">Клир · иерей</p>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-4">
+            <div class="clergy-card">
+              <span class="clergy-monogram" aria-hidden="true">АБ</span>
+              <h3 class="clergy-name">Александр Александрович Бычик</h3>
+              <p class="clergy-role">Клир · иерей</p>
+            </div>
           </div>
         </div>
       </div>
@@ -856,62 +849,66 @@
     >
       <div class="container">
         <div class="row">
-          <div class="col-md-6 probootstrap-animate">
+          <div class="col-md-12 text-center probootstrap-animate">
             <div class="probootstrap-heading dark">
-              <h2 class="primary-heading text-center">Контактные</h2>
-              <p class="secondary-heading text-center">данные</p>
-              <div class="text-left">
-                <p>
-                  Религиозная община приход храма святых благоверных князя Петра
-                  и княгини Февронии Муромских в г. Бресте Брестской епархии
-                  Белорусской Православной Церкви
-                </p>
-                <p>
-                  Республика Беларусь, 224002, г. Брест, ул. Рокоссовского 1<br />
-                  УНП 201018840<br /><br />
-                  р/с BY36MTBK30150001093300000401<br />
-                  ЗАО "МТБАНК", г. Минск<br />
-                  MTBKBY22
-                </p>
-              </div>
+              <h2 class="primary-heading">Контактные</h2>
+              <p class="secondary-heading">данные</p>
+            </div>
+          </div>
+        </div>
+        <div class="row contact-grid">
+          <div class="col-md-6 probootstrap-animate">
+            <div class="contact-card">
+              <p class="contact-lead">
+                Религиозная община приход храма святых благоверных князя Петра
+                и княгини Февронии Муромских в г. Бресте Брестской епархии
+                Белорусской Православной Церкви
+              </p>
+              <dl class="contact-list">
+                <div>
+                  <dt>Адрес</dt>
+                  <dd>Республика Беларусь, 224002, г. Брест, ул. Рокоссовского 1</dd>
+                </div>
+                <div>
+                  <dt>Телефон</dt>
+                  <dd><a href="tel:+375292213560">+375 29 221-35-60</a></dd>
+                </div>
+                <div>
+                  <dt>Эл. почта</dt>
+                  <dd><a href="mailto:info@prihodpfbrest.by">info@prihodpfbrest.by</a></dd>
+                </div>
+                <div>
+                  <dt>УНП</dt>
+                  <dd>201018840</dd>
+                </div>
+                <div>
+                  <dt>Расчётный счёт</dt>
+                  <dd>BY36MTBK30150001093300000401</dd>
+                </div>
+                <div>
+                  <dt>Банк</dt>
+                  <dd>ЗАО «МТБанк», г. Минск, BIC MTBKBY22</dd>
+                </div>
+              </dl>
+              <p class="contact-actions">
+                <a class="btn btn-primary btn-lg" href="tel:+375292213560">Позвонить</a>
+                <a class="btn btn-primary btn-lg" href="mailto:info@prihodpfbrest.by">Написать</a>
+              </p>
             </div>
           </div>
           <div class="col-md-6 probootstrap-animate">
-            <div class="probootstrap-block-image text-center">
-              <figure>
-                <a href="https://yandex.by/maps/-/CCUZIFdRgB" target="_blank" rel="noopener"
-                  ><img
-                    src="https://api-maps.yandex.ru/services/constructor/1.0/static/?um=constructor%3A440afd158df730ea43cba85a72264f5ccaacfb04e9ef1adcbbb2f270496f1152&amp;height=350&amp;lang=ru_RU"
-                    alt="Карта: г. Брест, ул. Рокоссовского 1"
-                    width="600"
-                    height="350"
-                    loading="lazy"
-                  />
-                </a>
-              </figure>
-            </div>
-            <div
-              class="col-md-6 col-xs-6 col-sm-5 col-lg-6 text-center probootstrap-animate"
-            >
-              <p>
-                <a
-                  class="btn btn-primary btn-lg"
-                  href="tel:+375292213560"
-                  >Позвонить</a
-                >
-              </p>
-            </div>
-            <div
-              class="col-md-6 col-xs-6 col-sm-4 col-lg-5 text-center probootstrap-animate"
-            >
-              <p>
-                <a
-                  class="btn btn-primary btn-lg"
-                  href="mailto:info@prihodpfbrest.by"
-                  >Написать</a
-                >
-              </p>
-            </div>
+            <figure class="contact-map">
+              <a href="https://yandex.by/maps/-/CCUZIFdRgB" target="_blank" rel="noopener"
+                ><img
+                  src="https://api-maps.yandex.ru/services/constructor/1.0/static/?um=constructor%3A440afd158df730ea43cba85a72264f5ccaacfb04e9ef1adcbbb2f270496f1152&amp;height=350&amp;lang=ru_RU"
+                  alt="Карта: г. Брест, ул. Рокоссовского 1"
+                  width="600"
+                  height="350"
+                  loading="lazy"
+                />
+              </a>
+              <figcaption>Нажмите на карту, чтобы открыть её в Яндекс Картах</figcaption>
+            </figure>
           </div>
         </div>
       </div>
