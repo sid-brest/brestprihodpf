@@ -3,8 +3,8 @@
 # Build tooling (scss/, schedule/, package.json, README) and source files never reach the web root.
 set -euo pipefail
 
-REPO=/home/prihodpf/repositories/brestprihodpf
-WEBROOT=/home/prihodpf/public_html
+REPO="${REPO:-/home/prihodpf/repositories/brestprihodpf}"
+WEBROOT="${WEBROOT:-/home/prihodpf/public_html}"
 
 git -C "$REPO" reset --hard
 git -C "$REPO" pull --ff-only
