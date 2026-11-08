@@ -1,43 +1,27 @@
-# Ignore the virtual environment directory
-.venv/
+# Dependencies / build temp
+node_modules/
+build/.vendor-concat.*
+
+# schedule tooling (local only)
 schedule/venv/
-
-# Ignore images
+.venv/
 schedule/images/
-
-# Ignore Docker
-docker/.env
-
-# Ignore text
 schedule/text/
-
-# Ignore logs
 schedule/logs/
-
-# Ignore Python compiled files
+schedule/*.txt
 schedule/__pycache__/
 *.pyc
 *.pyo
 *.pyd
+backups/
 
-# Ignore all .txt files
-schedule/*.txt
-
-# Ignore editor and IDE specific files
+# Editors / OS
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# Ignore system files
 .DS_Store
 Thumbs.db
 
-# Ignore backup files
-backups/
-
-# Ignore portainer
-docker/portainer-data/*
-
-# Other
-docker/ssh/*
+# source schedules dropped into schedule/ for testing
+schedule/*.docx

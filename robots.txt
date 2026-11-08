@@ -1,5 +1,3 @@
-robots.txt
 User-agent: *
-Disallow: 
 Disallow: /cgi-bin/
 Sitemap: https://prihodpfbrest.by/sitemap.xml

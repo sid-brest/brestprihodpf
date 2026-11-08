@@ -1,0 +1,4 @@
+Miama Nueva, Copyright (c) 2016-2025 Linus Romer.
+Licensed under the SIL Open Font License, Version 1.1 (OFL).
+Source: https://ctan.org/pkg/miama (miama.otf). This file is a WOFF2 subset
+(Basic Latin + Cyrillic + common punctuation) produced for prihodpfbrest.by.

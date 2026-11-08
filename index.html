@@ -3,33 +3,58 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>
-      Приход храма святых благоверных князя Петра и княгини Февронии Муромских в
-      г. Бресте Брестской епархии Белорусской Православной Церкви (Белорусского
-      Экзархата Московского Патриархата)
-    </title>
+    <title>Приход свв. Петра и Февронии Муромских в Бресте — расписание богослужений</title>
     <meta name="yandex-verification" content="1db46dbb146fd6d1" />
     <meta
       name="description"
-      content="Персональный сайт с информацией о расписании богослужений, контактными даными, историей и событиями православного прихода"
+      content="Православный приход храма святых благоверных князя Петра и княгини Февронии Муромских в г. Бресте: расписание богослужений, история, духовенство, события, контакты."
     />
+    <link rel="canonical" href="https://prihodpfbrest.by/" />
+    <meta name="theme-color" content="#262626" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="Приход свв. Петра и Февронии Муромских, Брест" />
+    <meta property="og:title" content="Приход свв. Петра и Февронии Муромских в Бресте" />
     <meta
-      name="keywords"
-      content="церковь, православный, приход, расписание, богослужений, брест, рокоссовского, иверской, иконы, божией, матери, петра, февронии, муромских"
+      property="og:description"
+      content="Расписание богослужений, история храма Иверской иконы Божией Матери, духовенство, события и контакты прихода."
     />
+    <meta property="og:url" content="https://prihodpfbrest.by/" />
+    <meta property="og:image" content="https://prihodpfbrest.by/img/hero_bg_1.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
-    <link rel="icon" href="img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      rel="icon"
-      href="https://prihodpfbrest.by/img/favicon.ico"
-      type="image/x-icon"
-    />
-    <link
-      href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Miama+Nueva"
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/styles-merged.css" />
-    <link rel="stylesheet" href="css/style.min.css" />
+    <link rel="preload" as="image" href="img/hero_bg_1.webp" />
+    <link rel="stylesheet" href="css/vendor.min.css?v=20261108" />
+    <link rel="stylesheet" href="css/style.min.css?v=20261108" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Church",
+        "name": "Приход храма святых благоверных князя Петра и княгини Февронии Муромских в г. Бресте",
+        "url": "https://prihodpfbrest.by/",
+        "telephone": "+375292213560",
+        "email": "info@prihodpfbrest.by",
+        "image": "https://prihodpfbrest.by/img/hero_bg_1.jpg",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "ул. Рокоссовского 1",
+          "addressLocality": "Брест",
+          "postalCode": "224002",
+          "addressCountry": "BY"
+        },
+        "hasMap": "https://yandex.by/maps/-/CCUZIFdRgB",
+        "parentOrganization": {
+          "@type": "Organization",
+          "name": "Брестская епархия Белорусской Православной Церкви"
+        }
+      }
+    </script>
   </head>
 
   <body>
@@ -46,7 +71,7 @@
             aria-expanded="false"
             aria-controls="navbar-collapse"
           >
-            <span class="sr-only">Toggle navigation</span>
+            <span class="sr-only">Открыть меню</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -58,21 +83,22 @@
         <div id="navbar-collapse" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li class="active">
-              <a href="#" data-nav-section="welcome">Главная</a>
+              <a href="#welcome" data-nav-section="welcome">Главная</a>
             </li>
-            <li><a href="#" data-nav-section="history">История</a></li>
-            <li><a href="#" data-nav-section="staff">Духовенство</a></li>
-            <li><a href="#" data-nav-section="schedule">Расписание</a></li>
-            <li><a href="#" data-nav-section="events">События</a></li>
-            <li><a href="#" data-nav-section="contact">Контакты</a></li>
+            <li><a href="#history" data-nav-section="history">История</a></li>
+            <li><a href="#staff" data-nav-section="staff">Духовенство</a></li>
+            <li><a href="#schedule" data-nav-section="schedule">Расписание</a></li>
+            <li><a href="#events" data-nav-section="events">События</a></li>
+            <li><a href="#contact" data-nav-section="contact">Контакты</a></li>
           </ul>
         </div>
       </div>
     </nav>
 
+    <main>
     <!-- Slider -->
 
-    <section class="flexslider" data-section="welcome">
+    <section class="flexslider" id="welcome" data-section="welcome">
       <ul class="slides">
         <li
           style="background-image: url(img/hero_bg_1.webp)"
@@ -88,13 +114,12 @@
                   <p class="sub-heading">
                     Приход храма святых благоверных князей
                   </p>
-                  <h1 class="primary-heading">
-                    <span style="font-size: 40px">кн.</span> Петра и
-                    <span style="font-size: 40px">кн.</span> Февронии
+                  <h1 class="primary-heading primary-heading-nowrap">
+                    <span class="abbr">кн.</span> Петра и
+                    <span class="abbr">кн.</span> Февронии
                   </h1>
-                  <h3 class="secondary-heading">Муромских</h3>
-                  <br /><br />
-                  <p class="sub-heading" style="font-size: 17px">
+                  <p class="secondary-heading">Муромских</p>
+                  <p class="sub-heading slider-note">
                     в г. Бресте Брестской епархии Белорусской Православной
                     Церкви<br />(Белорусского Экзархата Московского Патриархата)
                   </p>
@@ -111,8 +136,8 @@
                   class="probootstrap-slider-text text-center probootstrap-animate probootstrap-heading"
                 >
                   <p class="sub-heading">Храм в честь</p>
-                  <h1 class="primary-heading">Иверской иконы</h1>
-                  <h3 class="secondary-heading">Божией Матери</h3>
+                  <p class="primary-heading">Иверской иконы</p>
+                  <p class="secondary-heading">Божией Матери</p>
                 </div>
               </div>
             </div>
@@ -126,8 +151,8 @@
                   class="probootstrap-slider-text text-center probootstrap-animate probootstrap-heading"
                 >
                   <p class="sub-heading">Храм в честь</p>
-                  <h1 class="primary-heading">Иверской иконы</h1>
-                  <h3 class="secondary-heading">Божией Матери</h3>
+                  <p class="primary-heading">Иверской иконы</p>
+                  <p class="secondary-heading">Божией Матери</p>
                 </div>
               </div>
             </div>
@@ -136,18 +161,18 @@
       </ul>
     </section>
 
-    <!------------------------------ About ------------------------------>
+    <!-- About -->
 
     <section class="probootstrap-section probootstrap-bg-white">
       <div class="container">
         <div class="row">
           <div class="col-md-6 probootstrap-animate">
             <div class="probootstrap-heading dark text-center">
-              <h1 class="primary-heading">Сведения</h1>
-              <h3 class="secondary-heading">о приходе</h3>
+              <h2 class="primary-heading">Сведения</h2>
+              <p class="secondary-heading">о приходе</p>
               <span class="seperator">* * *</span>
             </div>
-            <div class="text-start">
+            <div class="text-left">
               <p>
                 Приход храма святых благоверных князя Петра и княгини Февронии
                 Муромских в г. Бресте Брестской епархии Белорусской Православной
@@ -182,9 +207,11 @@
               </p>
             </div>
           </div>
-          <div class="col-md-4 col-md-push-1 probootstrap-animate text-center">
+          <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0 col-md-push-1 probootstrap-animate text-center">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_1.webp" class="rounded" /></figure>
+              <figure>
+                <img src="img/img_1.webp" class="rounded" alt="Храм в честь Иверской иконы Божией Матери в Бресте" width="907" height="1212" loading="lazy" decoding="async" />
+              </figure>
             </div>
           </div>
         </div>
@@ -199,7 +226,7 @@
           aria-labelledby="historyModalCenterTitle"
           aria-hidden="true"
         >
-          <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <h3 class="modal-title" id="historyModalCenterTitle">
@@ -245,7 +272,7 @@
               <div class="modal-footer">
                 <button
                   type="button"
-                  class="btn btn-secondary"
+                  class="btn btn-default"
                   data-dismiss="modal"
                 >
                   Закрыть
@@ -257,10 +284,11 @@
       </div>
     </section>
 
-    <!------------------------------ History ------------------------------>
+    <!-- History -->
 
     <section
       class="probootstrap-section probootstrap-bg-white"
+      id="history"
       data-section="history"
     >
       <!-- <section class="probootstrap-section-bg overlay" style="background-image: url(img/hero_bg_4.webp);" 
@@ -270,7 +298,7 @@
           <div class="col-md-12 text-center probootstrap-animate">
             <div class="probootstrap-heading dark">
               <h2 class="primary-heading">История</h2>
-              <h3 class="secondary-heading">прихода</h3>
+              <p class="secondary-heading">прихода</p>
             </div>
           </div>
         </div>
@@ -284,7 +312,9 @@
         <div class="row">
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_2.webp" /></figure>
+              <figure>
+                <img src="img/img_square_2.webp" alt="Закладка храма в честь Иверской иконы Божией Матери, 2013 год" width="700" height="700" loading="lazy" decoding="async" />
+              </figure>
               <div class="text-center">
                 <br class="price" />Заклад храма в честь Иверской иконы Божией
                 Матери<br />
@@ -295,7 +325,9 @@
 
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_1.webp" /></figure>
+              <figure>
+                <img src="img/img_square_1.webp" alt="Богослужение во временном храме-палатке, 2013–2016 годы" width="700" height="700" loading="lazy" decoding="async" />
+              </figure>
               <div class="text-center">
                 <br class="price" />Службы в палатке<br />
                 <h3>2013-2016</h3>
@@ -305,7 +337,9 @@
 
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_4.webp" /></figure>
+              <figure>
+                <img src="img/img_square_4.webp" alt="Прихожане у временного храма-палатки" width="700" height="700" loading="lazy" decoding="async" />
+              </figure>
               <div class="text-center">
                 <br class="price" />Службы в палатке<br />
                 <h3>2013-2016</h3>
@@ -317,7 +351,9 @@
         <div class="row">
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_5.webp" /></figure>
+              <figure>
+                <img src="img/img_square_5.webp" alt="Именные блоки для строительства храма, 2014 год" width="700" height="700" loading="lazy" decoding="async" />
+              </figure>
               <div class="text-center">
                 <br class="price" />Именные блоки<br />
                 <h3>2014</h3>
@@ -327,7 +363,9 @@
 
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_6.webp" /></figure>
+              <figure>
+                <img src="img/img_square_6.webp" alt="Строительство храма в честь Иверской иконы Божией Матери, 2015 год" width="700" height="700" loading="lazy" decoding="async" />
+              </figure>
               <div class="text-center">
                 <br class="price" />Строительство храма в честь Иверской иконы
                 Божией Матери<br />
@@ -338,7 +376,9 @@
 
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_3.webp" /></figure>
+              <figure>
+                <img src="img/img_square_3.webp" alt="Строительство храма в честь Иверской иконы Божией Матери, 2016 год" width="700" height="700" loading="lazy" decoding="async" />
+              </figure>
               <div class="text-center">
                 <br class="price" />Строительство храма в честь Иверской иконы
                 Божией Матери<br />
@@ -350,12 +390,13 @@
       </div>
     </section>
 
-    <!------------------------------ Staff ------------------------------>
+    <!-- Staff -->
 
     <section
       class="probootstrap-section-bg overlay"
       style="background-image: url(img/hero_bg_5.webp)"
       data-stellar-background-ratio="0.5"
+      id="staff"
       data-section="staff"
     >
       <div class="container">
@@ -363,7 +404,7 @@
           <div class="col-md-12 text-center probootstrap-animate">
             <div class="probootstrap-heading">
               <h2 class="primary-heading">Духовенство</h2>
-              <h3 class="secondary-heading">прихода</h3>
+              <p class="secondary-heading">прихода</p>
             </div>
           </div>
         </div>
@@ -402,12 +443,13 @@
       </div>
     </section>
 
-    <!------------------------------ Schedule ------------------------------>
+    <!-- Schedule -->
 
     <section
       class="probootstrap-section-bg overlay"
       style="background-image: url(img/hero_bg_6.webp)"
       data-stellar-background-ratio="0.5"
+      id="schedule"
       data-section="schedule"
     >
       <div class="container">
@@ -415,7 +457,7 @@
           <div class="col-md-12 text-center probootstrap-animate">
             <div class="probootstrap-heading">
               <h2 class="primary-heading">Расписание</h2>
-              <h3 class="secondary-heading">Богослужений</h3>
+              <p class="secondary-heading">Богослужений</p>
             </div>
           </div>
         </div>
@@ -423,72 +465,78 @@
     </section>
     <section class="probootstrap-section probootstrap-bg-white">
       <div class="container">
-        <!------------------------------ Insert Schedule ------------------------------>
-
-      <!------------------------------ row ------------------------------>
-      <div class="row">
-        <div class="col-lg-3 col-sm-6 probootstrap-animate">
-          <div class="form-group">
-            <h3>7 ноября, суббота</h3>
-            <br />08:30 - Божественная Литургия. Панихида.
-<br /><br />Дмитриевская родительская суббота.
-<br /><br />18:00 - Воскресное всенощное бдение.
-          </div>
+        <!-- Insert Schedule: start -->
+      <p class="schedule-period">7 – 15 ноября</p>
+      <div class="row schedule-grid">
+        <div class="col-lg-3 col-sm-6 schedule-col">
+          <article class="schedule-day" data-date="2026-11-07">
+            <h3 class="schedule-date">7 ноября <span class="schedule-weekday">суббота</span></h3>
+            <ul class="schedule-list">
+              <li class="schedule-item"><time>08:30</time><span>Божественная Литургия. Панихида.</span></li>
+              <li class="schedule-note">Дмитриевская родительская суббота.</li>
+              <li class="schedule-item"><time>18:00</time><span>Воскресное всенощное бдение.</span></li>
+            </ul>
+          </article>
         </div>
-        <div class="col-lg-3 col-sm-6 probootstrap-animate">
-          <div class="form-group">
-            <h3>8 ноября, воскресенье</h3>
-            <br />08:30 - Божественная Литургия. Молебен. Панихида.
-<br /><br />17:00 - Молебен с акафистом Иверской иконе Божией Матери.
-<br /><br />18:00 - Воскресная школа для взрослых.
-          </div>
+        <div class="col-lg-3 col-sm-6 schedule-col">
+          <article class="schedule-day" data-date="2026-11-08">
+            <h3 class="schedule-date">8 ноября <span class="schedule-weekday">воскресенье</span></h3>
+            <ul class="schedule-list">
+              <li class="schedule-item"><time>08:30</time><span>Божественная Литургия. Молебен. Панихида.</span></li>
+              <li class="schedule-item"><time>17:00</time><span>Молебен с акафистом Иверской иконе Божией Матери.</span></li>
+              <li class="schedule-item"><time>18:00</time><span>Воскресная школа для взрослых.</span></li>
+            </ul>
+          </article>
         </div>
-        <div class="col-lg-3 col-sm-6 probootstrap-animate">
-          <div class="form-group">
-            <h3>11 ноября, среда</h3>
-            <br />18:00 - Вечерня. Утреня. (Полиелей)
-          </div>
+        <div class="col-lg-3 col-sm-6 schedule-col">
+          <article class="schedule-day" data-date="2026-11-11">
+            <h3 class="schedule-date">11 ноября <span class="schedule-weekday">среда</span></h3>
+            <ul class="schedule-list">
+              <li class="schedule-item"><time>18:00</time><span>Вечерня. Утреня. (Полиелей)</span></li>
+            </ul>
+          </article>
         </div>
-        <div class="col-lg-3 col-sm-6 probootstrap-animate">
-          <div class="form-group">
-            <h3>12 ноября, четверг</h3>
-            <br />08:30 - Божественная Литургия. Молебен. Панихида.
-<br /><br />Озерянской иконы Божией Матери.
-<br /><br />18:00 - Вечерня. Утреня.
-          </div>
+        <div class="col-lg-3 col-sm-6 schedule-col">
+          <article class="schedule-day" data-date="2026-11-12">
+            <h3 class="schedule-date">12 ноября <span class="schedule-weekday">четверг</span></h3>
+            <ul class="schedule-list">
+              <li class="schedule-item"><time>08:30</time><span>Божественная Литургия. Молебен. Панихида.</span></li>
+              <li class="schedule-note">Озерянской иконы Божией Матери.</li>
+              <li class="schedule-item"><time>18:00</time><span>Вечерня. Утреня.</span></li>
+            </ul>
+          </article>
+        </div>
+        <div class="col-lg-3 col-sm-6 schedule-col">
+          <article class="schedule-day" data-date="2026-11-13">
+            <h3 class="schedule-date">13 ноября <span class="schedule-weekday">пятница</span></h3>
+            <ul class="schedule-list">
+              <li class="schedule-item"><time>08:30</time><span>Божественная Литургия. Молебен. Панихида.</span></li>
+              <li class="schedule-item"><time>18:00</time><span>Утреня с парастасом.</span></li>
+            </ul>
+          </article>
+        </div>
+        <div class="col-lg-3 col-sm-6 schedule-col">
+          <article class="schedule-day" data-date="2026-11-14">
+            <h3 class="schedule-date">14 ноября <span class="schedule-weekday">суббота</span></h3>
+            <ul class="schedule-list">
+              <li class="schedule-item"><time>08:30</time><span>Божественная Литургия. Панихида.</span></li>
+              <li class="schedule-note">Михайловская родительская суббота.</li>
+              <li class="schedule-item"><time>18:00</time><span>Воскресное всенощное бдение.</span></li>
+            </ul>
+          </article>
+        </div>
+        <div class="col-lg-3 col-sm-6 schedule-col">
+          <article class="schedule-day" data-date="2026-11-15">
+            <h3 class="schedule-date">15 ноября <span class="schedule-weekday">воскресенье</span></h3>
+            <ul class="schedule-list">
+              <li class="schedule-item"><time>08:30</time><span>Божественная Литургия. Молебен. Панихида.</span></li>
+              <li class="schedule-item"><time>17:00</time><span>Молебен с акафистом свв. благ. кнн. Петру и Февронии Муромским.</span></li>
+              <li class="schedule-item"><time>18:00</time><span>Воскресная школа для взрослых.</span></li>
+            </ul>
+          </article>
         </div>
       </div>
-
-
-      <!------------------------------ row ------------------------------>
-      <div class="row">
-        <div class="col-lg-3 col-sm-6 probootstrap-animate">
-          <div class="form-group">
-            <h3>13 ноября, пятница</h3>
-            <br />08:30 - Божественная Литургия. Молебен. Панихида.
-<br /><br />18:00 - Утреня с парастасом.
-          </div>
-        </div>
-        <div class="col-lg-3 col-sm-6 probootstrap-animate">
-          <div class="form-group">
-            <h3>14 ноября, суббота</h3>
-            <br />08:30 - Божественная Литургия. Панихида.
-<br /><br />Михайловская родительская суббота.
-<br /><br />18:00 - Воскресное всенощное бдение.
-          </div>
-        </div>
-        <div class="col-lg-3 col-sm-6 probootstrap-animate">
-          <div class="form-group">
-            <h3>15 ноября, воскресенье</h3>
-            <br />08:30 - Божественная Литургия. Молебен. Панихида.
-<br /><br />17:00 - Молебен с акафистом
-<br /><br />свв. благ. кнн. Петру и Февронии Муромским.
-<br /><br />18:00 - Воскресная школа для взрослых.
-          </div>
-        </div>
-      </div>
-
-      <!------------------------------ Insert Schedule ------------------------------>
+      <!-- Insert Schedule: end -->
         <!-- <div class="row">
           <div class="col-md-12 col-lg-12 col-sm-12 probootstrap-animate">
             <div class="form-group text-left">
@@ -551,12 +599,13 @@
       </div>
     </section>
 
-    <!------------------------------ Events ------------------------------>
+    <!-- Events -->
 
     <section
       class="probootstrap-section-bg overlay"
       style="background-image: url(img/hero_bg_7.webp)"
       data-stellar-background-ratio="0.5"
+      id="events"
       data-section="events"
     >
       <div class="container">
@@ -564,7 +613,7 @@
           <div class="col-md-12 text-center probootstrap-animate">
             <div class="probootstrap-heading">
               <h2 class="primary-heading">События</h2>
-              <h3 class="secondary-heading">прихода</h3>
+              <p class="secondary-heading">прихода</p>
             </div>
           </div>
         </div>
@@ -576,7 +625,9 @@
         <div class="row">
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_12.webp" /></figure>
+              <figure>
+                <img src="img/img_square_12.webp" alt="День памяти Иверской иконы Божией Матери, октябрь 2020" width="700" height="700" loading="lazy" decoding="async" />
+              </figure>
               <div class="text">
                 <span class="date">октябрь 2020</span>
                 <h3>День памяти Иверской иконы Божией Матери</h3>
@@ -586,7 +637,9 @@
 
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_10.webp" /></figure>
+              <figure>
+                <img src="img/img_square_10.webp" alt="Духовное окормление военных, февраль 2021" width="700" height="700" loading="lazy" decoding="async" />
+              </figure>
               <div class="text">
                 <span class="date">февраль 2021</span>
                 <h3>Духовное окормление военных</h3>
@@ -596,7 +649,9 @@
 
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_8.webp" /></figure>
+              <figure>
+                <img src="img/img_square_8.webp" alt="День Семьи, май 2021" width="700" height="700" loading="lazy" decoding="async" />
+              </figure>
               <div class="text">
                 <span class="date">май 2021</span>
                 <h3>День Семьи</h3>
@@ -607,7 +662,9 @@
         <div class="row">
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_7.webp" /></figure>
+              <figure>
+                <img src="img/img_square_7.webp" alt="Передача духовной литературы в библиотеку, апрель 2022" width="700" height="700" loading="lazy" decoding="async" />
+              </figure>
               <div class="text">
                 <span class="date">апрель 2022</span>
                 <h3>Передача духовной литературы в библиотеку</h3>
@@ -617,7 +674,9 @@
 
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_11.webp" /></figure>
+              <figure>
+                <img src="img/img_square_11.webp" alt="Вербное воскресение, апрель 2022" width="700" height="700" loading="lazy" decoding="async" />
+              </figure>
               <div class="text">
                 <span class="date">апрель 2022</span>
                 <h3>Вербное воскресение</h3>
@@ -627,7 +686,9 @@
 
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_9.webp" /></figure>
+              <figure>
+                <img src="img/img_square_9.webp" alt="День жён-мироносиц, май 2022" width="700" height="700" loading="lazy" decoding="async" />
+              </figure>
               <div class="text">
                 <span class="date">май 2022</span>
                 <h3>День жён-мироносиц</h3>
@@ -639,7 +700,9 @@
         <div class="row">
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_13.webp" /></figure>
+              <figure>
+                <img src="img/img_square_13.webp" alt="Сестричество прихода, май 2022" width="800" height="505" loading="lazy" decoding="async" />
+              </figure>
               <div class="text">
                 <span class="date">май 2022</span>
                 <h3>Сестричество</h3>
@@ -649,7 +712,9 @@
 
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_14.webp" /></figure>
+              <figure>
+                <img src="img/img_square_14.webp" alt="Воскресная школа, сентябрь 2022" width="800" height="518" loading="lazy" decoding="async" />
+              </figure>
               <div class="text">
                 <span class="date">сентябрь 2022</span>
                 <h3>Воскресная школа</h3>
@@ -659,7 +724,9 @@
 
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_15.webp" /></figure>
+              <figure>
+                <img src="img/img_square_15.webp" alt="Братство прихода, сентябрь 2022" width="700" height="462" loading="lazy" decoding="async" />
+              </figure>
               <div class="text">
                 <span class="date">сентябрь 2022</span>
                 <h3>Братство</h3>
@@ -671,7 +738,9 @@
         <div class="row">
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_16.webp" /></figure>
+              <figure>
+                <img src="img/img_square_16.webp" alt="Паломническая поездка к православным святыням Минска, сентябрь 2022" width="700" height="700" loading="lazy" decoding="async" />
+              </figure>
               <div class="text">
                 <span class="date">сентябрь 2022</span>
                 <h3>Паломническая поездка к православным святыням г.Минска</h3>
@@ -681,7 +750,9 @@
 
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_17.webp" /></figure>
+              <figure>
+                <img src="img/img_square_17.webp" alt="Паломники у святынь Минска, сентябрь 2022" width="700" height="700" loading="lazy" decoding="async" />
+              </figure>
               <div class="text">
                 <span class="date">сентябрь 2022</span>
                 <h3>Паломническая поездка к православным святыням г.Минска</h3>
@@ -691,7 +762,9 @@
 
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_19.webp" /></figure>
+              <figure>
+                <img src="img/img_square_19.webp" alt="День части в 111-й гвардейской артиллерийской бригаде, октябрь 2022" width="700" height="700" loading="lazy" decoding="async" />
+              </figure>
               <div class="text">
                 <span class="date">октябрь 2022</span>
                 <h3>День части в 111-й гвардейской артиллерийской бригаде</h3>
@@ -703,7 +776,9 @@
         <div class="row">
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_18.webp" /></figure>
+              <figure>
+                <img src="img/img_square_18.webp" alt="День матери: урок нравственности, октябрь 2022" width="700" height="700" loading="lazy" decoding="async" />
+              </figure>
               <div class="text">
                 <span class="date">октябрь 2022</span>
                 <h3>День матери. <br />Урок нравственности</h3>
@@ -713,7 +788,9 @@
 
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_20.webp" /></figure>
+              <figure>
+                <img src="img/img_square_20.webp" alt="Выставка православной книги на Покров и День матери, октябрь 2022" width="700" height="700" loading="lazy" decoding="async" />
+              </figure>
               <div class="text">
                 <span class="date">октябрь 2022</span>
                 <h3>
@@ -726,7 +803,9 @@
 
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_21.webp" /></figure>
+              <figure>
+                <img src="img/img_square_21.webp" alt="Утренник, посвящённый Дню матери, октябрь 2022" width="800" height="800" loading="lazy" decoding="async" />
+              </figure>
               <div class="text">
                 <span class="date">октябрь 2022</span>
                 <h3>Утренник посвященный Дню матери</h3>
@@ -738,7 +817,9 @@
         <div class="row">
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_22.webp" /></figure>
+              <figure>
+                <img src="img/img_square_22.webp" alt="Утренник, посвящённый Рождеству Христову, январь 2023" width="800" height="393" loading="lazy" decoding="async" />
+              </figure>
               <div class="text">
                 <span class="date">январь 2023</span>
                 <h3>Утренник посвященный Рождеству Христову</h3>
@@ -748,7 +829,9 @@
 
           <div class="col-md-4 col-sm-4 probootstrap-animate">
             <div class="probootstrap-block-image">
-              <figure><img src="img/img_square_23.webp" /></figure>
+              <figure>
+                <img src="img/img_square_23.webp" alt="Беседа с детьми «Я и моя семья без сквернословия», октябрь 2026" width="800" height="450" loading="lazy" decoding="async" />
+              </figure>
               <div class="text">
                 <span class="date">октябрь 2026</span>
                 <h3>Беседа с детьми: «Я и моя семья без сквернословия»</h3>
@@ -759,19 +842,20 @@
       </div>
     </section>
 
-    <!------------------------------ Contacts ------------------------------>
+    <!-- Contacts -->
 
     <section
       class="probootstrap-section probootstrap-bg-white"
+      id="contact"
       data-section="contact"
     >
       <div class="container">
         <div class="row">
           <div class="col-md-6 probootstrap-animate">
             <div class="probootstrap-heading dark">
-              <h1 class="primary-heading text-center">Контактные</h1>
-              <h3 class="secondary-heading text-center">данные</h3>
-              <div class="text-start">
+              <h2 class="primary-heading text-center">Контактные</h2>
+              <p class="secondary-heading text-center">данные</p>
+              <div class="text-left">
                 <p>
                   Религиозная община приход храма святых благоверных князя Петра
                   и княгини Февронии Муромских в г. Бресте Брестской епархии
@@ -789,15 +873,17 @@
           </div>
           <div class="col-md-6 probootstrap-animate">
             <div class="probootstrap-block-image text-center">
-              <p>
-                <figure>
-                  <a href="https://yandex.by/maps/-/CCUZIFdRgB" target="_blank"
-                    ><img
-                      src="https://api-maps.yandex.ru/services/constructor/1.0/static/?um=constructor%3A440afd158df730ea43cba85a72264f5ccaacfb04e9ef1adcbbb2f270496f1152&amp;height=350&amp;lang=ru_RU"
-                    />
-                  </a>
-                </figure>
-              </p>
+              <figure>
+                <a href="https://yandex.by/maps/-/CCUZIFdRgB" target="_blank" rel="noopener"
+                  ><img
+                    src="https://api-maps.yandex.ru/services/constructor/1.0/static/?um=constructor%3A440afd158df730ea43cba85a72264f5ccaacfb04e9ef1adcbbb2f270496f1152&amp;height=350&amp;lang=ru_RU"
+                    alt="Карта: г. Брест, ул. Рокоссовского 1"
+                    width="600"
+                    height="350"
+                    loading="lazy"
+                  />
+                </a>
+              </figure>
             </div>
             <div
               class="col-md-6 col-xs-6 col-sm-5 col-lg-6 text-center probootstrap-animate"
@@ -806,7 +892,6 @@
                 <a
                   class="btn btn-primary btn-lg"
                   href="tel:+375292213560"
-                  role="button"
                   >Позвонить</a
                 >
               </p>
@@ -818,7 +903,6 @@
                 <a
                   class="btn btn-primary btn-lg"
                   href="mailto:info@prihodpfbrest.by"
-                  role="button"
                   >Написать</a
                 >
               </p>
@@ -828,9 +912,11 @@
       </div>
     </section>
 
-    <!------------------------------ Copyright ------------------------------>
+    </main>
 
-    <section class="probootstrap-copyright">
+    <!-- Copyright -->
+
+    <footer class="probootstrap-copyright">
       <div class="container">
         <div class="row">
           <div class="col-md-8">
@@ -843,20 +929,20 @@
           </div>
           <div class="col-md-4 probootstrap-footer-social right">
             <p class="text-center">
-              <a href="https://github.com/sid-brest"
-                ><i class="icon-github"></i>&nbsp;Разработка и поддержка</a
+              <a href="https://github.com/sid-brest" rel="noopener"
+                ><i class="icon-github" aria-hidden="true"></i>&nbsp;Разработка и поддержка</a
               >
             </p>
           </div>
         </div>
       </div>
-    </section>
+    </footer>
 
-    <script src="js/scripts.min.js"></script>
-    <script src="js/custom.min.js"></script>
+    <script src="js/vendor.min.js?v=20261108"></script>
+    <script src="js/custom.min.js?v=20261108"></script>
     <!-- <script src="https://app.embed.im/snow.js" defer></script> -->
 
-    <!------------------------------ Pop-up window  ------------------------------>
+    <!-- Pop-up window -->
 
     <!-- <div class="modal fade" id="extranews">
       <div class="modal-dialog">
@@ -889,7 +975,7 @@
           <div class="modal-footer">
             <button
               type="button"
-              class="btn btn-secondary"
+              class="btn btn-default"
               data-dismiss="modal"
             >
               Закрыть

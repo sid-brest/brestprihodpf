@@ -1,19 +1,24 @@
-// Import font(s) from google.
-
-// Mixins
+// Fonts
+// Open Sans is loaded from Google Fonts (see index.html).
+// Miama Nueva (OFL) is self-hosted: it is not available on Google Fonts.
 @font-face {
-	font-family: 'icomoon';
-	src:url('../fonts/icomoon/icomoon.eot?1z9v6x');
-	src:url('../fonts/icomoon/icomoon.eot?1z9v6x#iefix') format('embedded-opentype'),
-		url('../fonts/icomoon/icomoon.ttf?1z9v6x') format('truetype'),
-		url('../fonts/icomoon/icomoon.woff?1z9v6x') format('woff'),
-		url('../fonts/icomoon/icomoon.svg?1z9v6x#icomoon') format('svg');
+	font-family: 'Miama Nueva';
+	src: url('../fonts/miama-nueva/MiamaNueva.woff2') format('woff2');
 	font-weight: normal;
 	font-style: normal;
+	font-display: swap;
+}
+
+// icomoon is a 3-glyph subset: chevron-thin-left (e929), chevron-thin-right (e92a), github (ea6b).
+@font-face {
+	font-family: 'icomoon';
+	src: url('../fonts/icomoon/icomoon.woff2?v=2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
 }
 
 @mixin icomoon() {
-	
 	font-family: 'icomoon';
 	speak: none;
 	font-style: normal;
@@ -21,17 +26,25 @@
 	font-variant: normal;
 	text-transform: none;
 	line-height: 1;
-
-	/* Better Font Rendering =========== */
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	
 }
+
+[class^="icon-"], [class*=" icon-"] {
+	@include icomoon;
+}
+.icon-chevron-thin-left:before { content: "\e929"; }
+.icon-chevron-thin-right:before { content: "\e92a"; }
+.icon-github:before { content: "\ea6b"; }
 
 // Variables
 $font-primary: 'Open Sans', Arial, sans-serif;
-$font-secondary: 'Pinyon Script', serif;
-$brand-primary: #FFA33E;
+$font-secondary: 'Miama Nueva', cursive;
+$brand-primary: #FFA33E;        // фон кнопок, акценты на фото (белый текст на нём не читается)
+$brand-primary-text: #D66F00;   // рукописные заголовки: 3.42:1 на белом (AA для крупного текста)
+$brand-link: #A85700;           // ссылки, активное меню, мелкий оранжевый текст: 5.21:1 (AA)
+$brand-dark: #222222;           // текст на оранжевых кнопках: 8:1
+$text-color: #5f636a;           // основной текст: 6.04:1 на белом, 4.75:1 на #E4E4E4
 $brand-black: #000000;
 $brand-white: #ffffff;
 $brand-dropdown: #85C8DD;

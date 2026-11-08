@@ -1,16 +1,19 @@
 {
-"devDependencies": {
-  "gulp": "latest",
-  "gulp-sass": "latest",
-  "gulp-uglify": "latest",
-  "gulp-rename": "latest",
-  "gulp-notify": "latest",
-  "gulp-minify-css": "latest",
-  "gulp-concat": "latest",
-  "gulp-plumber": "latest",
-  "browser-sync": "latest",
-  "gulp-sourcemaps": "latest",
-  "gulp-autoprefixer": "latest",
-  "gulp-clean-css": "latest"
+  "name": "brestprihodpf",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Static one-page site of the parish of Sts. Peter and Fevronia of Murom, Brest",
+  "scripts": {
+    "build": "npm run build:css && npm run build:vendor-css && npm run build:vendor-js && npm run build:js",
+    "build:css": "sass --no-source-map --style=compressed scss/style.scss css/style.min.css",
+    "build:vendor-css": "node build/vendor-css.mjs build/.vendor-concat.css && cleancss -O1 -o css/vendor.min.css build/.vendor-concat.css",
+    "build:vendor-js": "node build/vendor-js.mjs build/.vendor-concat.js && terser build/.vendor-concat.js --compress --mangle --comments \"/^!|@license|@preserve/\" -o js/vendor.min.js",
+    "build:js": "terser js/custom.js --compress --mangle -o js/custom.min.js",
+    "watch:css": "sass --no-source-map --style=compressed --watch scss/style.scss css/style.min.css"
+  },
+  "devDependencies": {
+    "clean-css-cli": "^5.6.3",
+    "sass": "^1.108.1",
+    "terser": "^5.51.2"
   }
 }

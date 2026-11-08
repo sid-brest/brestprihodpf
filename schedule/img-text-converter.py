@@ -77,7 +77,7 @@ def check_files_in_folders():
 def extract_text_from_txt(file_path):
     """Извлекает текст из TXT файла"""
     try:
-        with open(file_path, 'r', encoding='utf-8') as file:
+        with open(file_path, 'r', encoding='utf-8-sig') as file:
             return file.read()
     except UnicodeDecodeError:
         # Пробуем другие кодировки, если utf-8 не работает
@@ -226,7 +226,7 @@ def process_text(input_text):
     for row in rows:
         # Check if row contains month and day name
         if re.search(
-            r"\b(?:Январ[ь|я]|Феврал[ь|я]|Март[а]?|Апрел[ь|я]|Ма[й|я]|Июн[ь|я]|Июл[ь|я]|Август[а]?|Сентябр[ь|я]|Октябр[ь|я]|Ноябр[ь|я]|Декабр[ь|я])\s*,\s*(?:Понедельник|Вторник|Сред[а|у]|Четверг|Пятниц[а|у]|Суббот[а|у]|Воскресенье)\s*",
+            r"\b(?:Январ[ья]|Феврал[ья]|Марта?|Апрел[ья]|Ма[йя]|Июн[ья]|Июл[ья]|Августа?|Сентябр[ья]|Октябр[ья]|Ноябр[ья]|Декабр[ья])\s*,\s*(?:Понедельник|Вторник|Сред[ау]|Четверг|Пятниц[ау]|Суббот[ау]|Воскресенье)\s*",
             row,
             flags=re.IGNORECASE,
         ):
@@ -254,46 +254,110 @@ def process_text(input_text):
     return output_text
 
 
-def create_schedule_html(text):
-    """Преобразует текст расписания в HTML-структуру для index.html"""
-    # Разбиваем текст на записи по тегу h3
-    entries = re.split(r"<h3>(.*?)</h3>", text)
-    entries = [e.strip() for e in entries if e.strip()]
+MONTHS_GENITIVE = {
+    "января": 1, "февраля": 2, "марта": 3, "апреля": 4, "мая": 5, "июня": 6,
+    "июля": 7, "августа": 8, "сентября": 9, "октября": 10, "ноября": 11, "декабря": 12,
+}
+MONTH_NAME_BY_NUMBER = {number: name for name, number in MONTHS_GENITIVE.items()}
+TIME_LINE_RE = re.compile(r"^(\d{1,2}:\d{2})\s*[-–—]\s*(.+)$")
+DATE_HEADING_RE = re.compile(r"^(\d{1,2})\s+([а-яё]+)\s*,\s*([а-яё]+)\s*$", re.IGNORECASE)
 
-    # Группируем записи по 4 (для каждого ряда)
+
+def guess_year(month: int) -> int:
+    """Год расписания: текущий, с поправкой на стык декабрь/январь."""
+    today = datetime.now()
+    if month == 1 and today.month == 12:
+        return today.year + 1
+    if month == 12 and today.month == 1:
+        return today.year - 1
+    return today.year
+
+
+def parse_day(heading: str, lines: list[str]) -> dict:
+    """Разбирает заголовок дня ("7 ноября, суббота") и строки расписания.
+
+    Строка со временем ("08:30 - ...") становится записью; строка без времени,
+    начинающаяся со строчной буквы, продолжает предыдущую запись (перенос OCR);
+    остальные строки без времени (память святого, родительская суббота) - заметки.
+    """
+    match = DATE_HEADING_RE.match(heading.strip())
+    if not match:
+        raise ValueError(f"Не удалось разобрать дату: {heading!r}")
+    day = int(match.group(1))
+    month = MONTHS_GENITIVE.get(match.group(2).lower())
+    if not month:
+        raise ValueError(f"Неизвестный месяц в заголовке: {heading!r}")
+    weekday = match.group(3).lower()
+
+    items: list[dict] = []
+    for line in lines:
+        time_match = TIME_LINE_RE.match(line)
+        if time_match:
+            items.append({"time": time_match.group(1), "text": time_match.group(2).strip()})
+            continue
+        last = items[-1] if items else None
+        if re.match(r"^[а-яё]", line) and last and "time" in last:
+            last["text"] = f"{last['text']} {line}"
+            continue
+        items.append({"note": line})
+
+    return {
+        "day": day,
+        "month": month,
+        "weekday": weekday,
+        "iso": f"{guess_year(month)}-{month:02d}-{day:02d}",
+        "items": items,
+    }
+
+
+def render_day(day: dict) -> str:
+    """HTML-карточка одного дня."""
     rows = []
-    current_row = []
-
-    for i in range(0, len(entries), 2):
-        if i + 1 < len(entries):
-            date = entries[i]
-            content = entries[i + 1]
-
-            entry_html = f"""
-        <div class="col-lg-3 col-sm-6 probootstrap-animate">
-          <div class="form-group">
-            <h3>{date}</h3>
-            {content}
-          </div>
+    for item in day["items"]:
+        if "time" in item:
+            rows.append(
+                f'              <li class="schedule-item"><time>{item["time"]}</time><span>{item["text"]}</span></li>'
+            )
+        else:
+            rows.append(f'              <li class="schedule-note">{item["note"]}</li>')
+    rows_html = "\n".join(rows)
+    month_name = MONTH_NAME_BY_NUMBER[day["month"]]
+    return f"""        <div class="col-lg-3 col-sm-6 schedule-col">
+          <article class="schedule-day" data-date="{day['iso']}">
+            <h3 class="schedule-date">{day['day']} {month_name} <span class="schedule-weekday">{day['weekday']}</span></h3>
+            <ul class="schedule-list">
+{rows_html}
+            </ul>
+          </article>
         </div>"""
 
-            current_row.append(entry_html)
 
-            if len(current_row) == 4:
-                rows.append(
-                    "\n      <!------------------------------ row ------------------------------>"
-                    f'\n      <div class="row">{"".join(current_row)}\n      </div>\n'
-                )
-                current_row = []
-
-    # Добавляем оставшиеся записи, если есть
-    if current_row:
-        rows.append(
-            "\n      <!------------------------------ row ------------------------------>"
-            f'\n      <div class="row">{"".join(current_row)}\n      </div>\n'
+def render_period(days: list[dict]) -> str:
+    """Подзаголовок с периодом расписания, например "7 – 15 ноября"."""
+    first, last = days[0], days[-1]
+    if first["month"] == last["month"]:
+        text = f"{first['day']} – {last['day']} {MONTH_NAME_BY_NUMBER[first['month']]}"
+    else:
+        text = (
+            f"{first['day']} {MONTH_NAME_BY_NUMBER[first['month']]} – "
+            f"{last['day']} {MONTH_NAME_BY_NUMBER[last['month']]}"
         )
+    return f'      <p class="schedule-period">{text}</p>'
 
-    return "\n".join(rows)
+
+def create_schedule_html(text: str) -> str:
+    """Преобразует обработанный текст (<h3>дата</h3> + строки через <br />) в карточки расписания."""
+    parts = re.split(r"<h3>(.*?)</h3>", text)
+    days = []
+    for i in range(1, len(parts) - 1, 2):
+        heading = parts[i]
+        lines = [line.strip() for line in re.split(r"<br\s*/?>", parts[i + 1]) if line.strip()]
+        days.append(parse_day(heading, lines))
+    if not days:
+        raise ValueError("В тексте не найдено ни одного дня расписания")
+
+    cards = "\n".join(render_day(day) for day in days)
+    return f'{render_period(days)}\n      <div class="row schedule-grid">\n{cards}\n      </div>'
 
 
 def update_index_html(schedule_html):
@@ -323,15 +387,20 @@ def update_index_html(schedule_html):
             content = file.read()
 
         # Находим секцию расписания и заменяем её
-        start_marker = "<!------------------------------ Insert Schedule ------------------------------>"
-        end_marker = "<!------------------------------ Insert Schedule ------------------------------>"
+        start_marker = "<!-- Insert Schedule: start -->"
+        end_marker = "<!-- Insert Schedule: end -->"
 
         # Формируем новое содержимое
         schedule_section = f"{start_marker}\n{schedule_html}\n      {end_marker}"
 
-        # Заменяем старую секцию на новую
-        pattern = f"{start_marker}.*?{end_marker}"
-        new_content = re.sub(pattern, schedule_section, content, flags=re.DOTALL)
+        # Заменяем старую секцию на новую (маркеры экранируем; замена через lambda,
+        # чтобы обратные слэши в тексте расписания не трактовались как спецпоследовательности)
+        pattern = f"{re.escape(start_marker)}.*?{re.escape(end_marker)}"
+        new_content, replaced = re.subn(pattern, lambda _m: schedule_section, content, flags=re.DOTALL)
+        if replaced != 1:
+            raise RuntimeError(
+                f"Маркеры расписания не найдены или найдены несколько раз ({replaced}). index.html не изменён."
+            )
 
         # Записываем обновленное содержимое
         with open(INDEX_FILE, "w", encoding="utf-8") as file:
