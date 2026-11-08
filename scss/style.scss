@@ -1,6 +1,7 @@
 @use 'custom-settings' as *;
 
-html {
+html,
+body {
 	overflow-x: hidden;
 }
 body {
@@ -1478,9 +1479,17 @@ section[data-section="menu"] {
 	.btn {
 		margin: 0 10px 10px 0;
 	}
+	@media screen and (max-width: $screen-sm - 1) {
+		text-align: center;
+		.btn {
+			margin: 0 5px 10px;
+		}
+	}
 }
 .contact-map {
 	flex: 1;
+	min-width: 0;
+	max-width: 100%;
 	display: flex;
 	flex-direction: column;
 	margin: 0;
@@ -1505,6 +1514,7 @@ section[data-section="menu"] {
 
 /* Flex grids: below the sm breakpoint Bootstrap columns have no width, so force full-width rows */
 @media screen and (max-width: $screen-sm - 1) {
+	.about-grid > [class*="col-"],
 	.probootstrap-cards .row > [class*="col-"],
 	.clergy-grid > [class*="col-"],
 	.contact-grid > [class*="col-"] {
@@ -1534,8 +1544,14 @@ section[data-section="menu"] {
 	}
 }
 .about-photo {
-	margin: 0 auto;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
 	max-width: 380px;
+	@media screen and (max-width: $screen-xs) {
+		max-width: 260px;
+	}
 	img {
 		width: 100%;
 		height: auto;
@@ -1597,5 +1613,38 @@ section[data-section="menu"] {
 	.about-shrines > [class*="col-"] {
 		flex: 0 0 100%;
 		max-width: 100%;
+	}
+}
+
+/* Flex items with replaced content must be allowed to shrink below their intrinsic width */
+.about-grid > [class*="col-"],
+.probootstrap-cards .row > [class*="col-"],
+.clergy-grid > [class*="col-"],
+.contact-grid > [class*="col-"],
+.schedule-col,
+.probootstrap-block-image,
+.schedule-day,
+.clergy-card,
+.contact-card,
+.about-photo,
+.contact-map {
+	min-width: 0;
+}
+.about-photo img,
+.contact-map img,
+.probootstrap-block-image img {
+	max-width: 100%;
+}
+
+/* Grids whose columns are md-only: single column on tablets as well */
+@media screen and (max-width: 991px) {
+	.about-grid > [class*="col-"],
+	.contact-grid > [class*="col-"] {
+		flex: 0 0 100%;
+		max-width: 100%;
+	}
+	.contact-map img {
+		min-height: 0;
+		height: auto;
 	}
 }
