@@ -1366,3 +1366,55 @@ section[data-section="menu"] {
 	font-style: italic;
 	color: $brand-link;
 }
+
+/* Shop hours strip under the schedule */
+.schedule-info {
+	margin-top: 10px;
+	padding: 22px 24px;
+	text-align: center;
+	background: #fbf8f3;
+	border: 1px solid rgba($brand-primary, .4);
+	border-radius: 8px;
+}
+.schedule-info-title {
+	margin: 0 0 14px;
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: .15em;
+	text-transform: uppercase;
+	color: $brand-link;
+}
+.schedule-info-list {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	margin: 0;
+}
+.schedule-info-item {
+	padding: 0 28px;
+	dt {
+		font-weight: 400;
+		font-size: 14px;
+		color: $text-color;
+	}
+	dd {
+		margin: 2px 0 0;
+		font-size: 22px;
+		font-weight: 700;
+		line-height: 1.2;
+		color: $brand-black;
+		font-variant-numeric: tabular-nums;
+	}
+	& + & {
+		border-left: 1px solid rgba(0,0,0,.08);
+	}
+	@media screen and (max-width: $screen-xs) {
+		flex: 0 0 100%;
+		padding: 10px 0 0;
+		& + & {
+			border-left: 0;
+			margin-top: 10px;
+			border-top: 1px solid rgba(0,0,0,.08);
+		}
+	}
+}
