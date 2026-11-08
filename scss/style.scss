@@ -1607,7 +1607,7 @@ section[data-section="menu"] {
 .probootstrap-copyright {
 	background: #262626;
 	border-top: 3px solid $brand-primary;
-	padding: 50px 0 22px;
+	padding: 34px 0 22px;
 	color: #a0a3a8; // 5.98:1 on #262626
 	font-size: 14px;
 	line-height: 1.6;
@@ -1625,22 +1625,13 @@ section[data-section="menu"] {
 		padding-top: 36px;
 	}
 }
-.footer-grid {
-	> [class*="col-"] {
-		margin-bottom: 28px;
-	}
-}
 .footer-title {
-	margin: 0 0 10px !important;
+	margin: 0 0 16px !important;
 	font-size: 12px;
 	font-weight: 700;
 	letter-spacing: .15em;
 	text-transform: uppercase;
 	color: $heading-on-photo;
-}
-.footer-text {
-	margin: 0;
-	font-style: normal;
 }
 .footer-bottom {
 	display: flex;
