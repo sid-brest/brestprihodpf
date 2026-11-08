@@ -1399,24 +1399,8 @@ section[data-section="menu"] {
 	background: $brand-white;
 	border: 1px solid rgba(0,0,0,.08);
 	border-radius: 8px;
-	padding: 32px 20px 28px;
+	padding: 28px 20px 26px;
 	box-shadow: 0 2px 12px rgba(0,0,0,.04);
-}
-.clergy-monogram {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 76px;
-	height: 76px;
-	margin-bottom: 18px;
-	border-radius: 50%;
-	background: #fbf8f3;
-	border: 2px solid rgba($brand-primary, .6);
-	color: $brand-primary-text;
-	font-family: $font-secondary;
-	font-size: 34px;
-	line-height: 1;
-	padding-top: 4px;
 }
 .clergy-name {
 	margin: 0 0 8px;
