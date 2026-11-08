@@ -602,54 +602,8 @@ section[data-section="menu"] {
 	}
 }
 
-.probootstrap-copyright {
-	background: lighten($brand-black, 15%);
-	padding: 20px 0;
-	color: #a0a3a8; // 5.98:1 on #262626
-	a {
-		color: #b0b3b8; // 7.2:1 on #262626
-		&:hover {
-			color: rgba(255,255,255,1);	
-		}
-	}
-	p {
-		font-size: 14px;
-		&:last-child {
-			margin-bottom: 0;
-		}
-	}
-	p.copyright-text {
-		@media screen and (max-width: $screen-sm) {
-			margin-bottom: 20px;
-		}
-	}
-}
-.probootstrap-footer-social {
-	padding: 0;
-	margin: 0;
-	&.right {
-		text-align: right;
-		@media screen and (max-width: $screen-sm) {
-			text-align: left;
-		}
-	}
-	li {
-		display: inline;
-		padding: 0;
-		margin: 0;
-		list-style: none;
-		a {
-			padding: 10px;
-			font-size: 22px;
-		}
-		&:first-child {
-			> a {
-				padding-left: 0;	
-			}
-			
-		}
-	}
-}
+
+
 
 // Components
 .probootstrap-block-image {
@@ -1477,12 +1431,12 @@ section[data-section="menu"] {
 .contact-actions {
 	margin: 0;
 	.btn {
-		margin: 0 10px 10px 0;
+		margin: 0 24px 12px 0;
 	}
 	@media screen and (max-width: $screen-sm - 1) {
 		text-align: center;
 		.btn {
-			margin: 0 5px 10px;
+			margin: 0 10px 12px;
 		}
 	}
 }
@@ -1646,5 +1600,70 @@ section[data-section="menu"] {
 	.contact-map img {
 		min-height: 0;
 		height: auto;
+	}
+}
+
+/* Footer */
+.probootstrap-copyright {
+	background: #262626;
+	border-top: 3px solid $brand-primary;
+	padding: 50px 0 22px;
+	color: #a0a3a8; // 5.98:1 on #262626
+	font-size: 14px;
+	line-height: 1.6;
+	a {
+		color: #d6d8dc;
+		&:hover,
+		&:focus {
+			color: $brand-white;
+		}
+	}
+	p {
+		margin: 0;
+	}
+	@media screen and (max-width: $screen-sm) {
+		padding-top: 36px;
+	}
+}
+.footer-grid {
+	> [class*="col-"] {
+		margin-bottom: 28px;
+	}
+}
+.footer-title {
+	margin: 0 0 10px !important;
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: .15em;
+	text-transform: uppercase;
+	color: $heading-on-photo;
+}
+.footer-text {
+	margin: 0;
+	font-style: normal;
+}
+.footer-nav {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	li {
+		margin: 0 0 4px;
+	}
+}
+.footer-bottom {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	gap: 8px 24px;
+	padding-top: 18px;
+	border-top: 1px solid rgba(255,255,255,.08);
+	font-size: 13px;
+	color: #8a8d93; // 4.6:1 on #262626
+	.footer-credit a {
+		color: #b0b3b8;
+		&:hover {
+			color: $brand-white;
+		}
 	}
 }
